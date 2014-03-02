@@ -1,2 +1,2 @@
-appjs
+AppJS Framework
 =====
