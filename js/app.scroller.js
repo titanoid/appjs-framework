@@ -464,11 +464,20 @@ AppScroller.prototype._getCurrentPosition = function() {
 
 AppScroller.prototype.refresh = function() {
 	this._maxScrollX = this.wrapper.parentNode.clientWidth - this.wrapper.clientWidth;
-	this.hasScroll.x = false;
-	//this.scrollTo(0, this.scrollPosition.y);
+	if (this._maxScrollX > 0) {
+		this.hasScroll.x = false;
+		this._maxScrollX = 0;
+	}
+	else 
+		this.hasScroll.x = true;
 
 	this._maxScrollY = this.wrapper.parentNode.clientHeight - this.wrapper.clientHeight;
-	this.hasScroll.y = true;
+	if (this._maxScrollY > 0) {
+		this.hasScroll.y = false;
+		this._maxScrollY = 0;
+	}
+	else 
+		this.hasScroll.y = true;
 
 	this._bounceBack();
 }
