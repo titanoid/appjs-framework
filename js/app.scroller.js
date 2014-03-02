@@ -29,7 +29,7 @@ utils.easing = {
 	}
 
 function AppScroller(wrapper, settings) {
-
+	console.log('appjsframework');
 	this.wrapper = wrapper;
 
 	this.settings = settings;
@@ -344,12 +344,9 @@ AppScroller.prototype._move = function(x, y, animate) {
 			this.wrapper.style.webkitTransition = "none";
 			this.wrapper.style.transition = "none";
 
-			var objref = this;
-			setTimeout(function() {
-				objref.wrapper.style.transform = 'translate('+x+'px, '+y+'px) translateZ(0)';
-				objref.wrapper.style.WebkitTransform = 'translate('+x+'px, '+y+'px) translateZ(0)';
-				objref.wrapper.style.MsTransform = 'translate('+x+'px, '+y+'px) translateZ(0)';
-			}, 0);
+			this.wrapper.style.transform = 'translate('+x+'px, '+y+'px) translateZ(0)';
+			this.wrapper.style.WebkitTransform = 'translate('+x+'px, '+y+'px) translateZ(0)';
+			this.wrapper.style.MsTransform = 'translate('+x+'px, '+y+'px) translateZ(0)';
 		}
 		else {
 			var easing_str = utils.easing[animate.easing].style;
@@ -464,7 +461,7 @@ AppScroller.prototype._getCurrentPosition = function() {
 
 AppScroller.prototype.refresh = function() {
 	this._maxScrollX = this.wrapper.parentNode.clientWidth - this.wrapper.clientWidth;
-	if (this._maxScrollX > 0) {
+	if (this._maxScrollX >= 0) {
 		this.hasScroll.x = false;
 		this._maxScrollX = 0;
 	}
@@ -472,7 +469,8 @@ AppScroller.prototype.refresh = function() {
 		this.hasScroll.x = true;
 
 	this._maxScrollY = this.wrapper.parentNode.clientHeight - this.wrapper.clientHeight;
-	if (this._maxScrollY > 0) {
+	console.log(this._maxScrollY);
+	if (this._maxScrollY >= 0) {
 		this.hasScroll.y = false;
 		this._maxScrollY = 0;
 	}
