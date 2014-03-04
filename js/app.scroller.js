@@ -29,6 +29,7 @@ utils.easing = {
 	}
 
 function AppScroller(wrapper, settings) {
+	console.log('appjsframework');
 	this.wrapper = wrapper;
 
 	this.settings = settings;
@@ -233,12 +234,8 @@ AppScroller.prototype._getMomentum = function(curr_pos) {
 		speedX = 0;
 		speedY = 0;
 	}
-	else {
-		speedX = speedX * 0.8;
-		speedY = speedY * 0.8;
-	}
 	
-	var deceleration = 0.002;
+	var deceleration = 0.001;
 
 	dist_x = (speedX * speedX) / ( 2 * deceleration) * ( dist_x < 0 ? -1 : 1 );
 	dist_y = (speedY * speedY) / ( 2 * deceleration) * ( dist_y < 0 ? -1 : 1 );
@@ -472,6 +469,7 @@ AppScroller.prototype.refresh = function() {
 		this.hasScroll.x = true;
 
 	this._maxScrollY = this.wrapper.parentNode.clientHeight - this.wrapper.clientHeight;
+	console.log(this._maxScrollY);
 	if (this._maxScrollY >= 0) {
 		this.hasScroll.y = false;
 		this._maxScrollY = 0;
