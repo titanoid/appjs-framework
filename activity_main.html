@@ -7,6 +7,7 @@
 <script src="http://dev.appjsframework.com/js/app.js"></script>
 <script src="http://dev.appjsframework.com/js/app.scroller.js"></script>
 
+<button class="btn-blue" id="btnScrollStop" style="position:absolute;z-index:100; right:230px; bottom:20px;" onclick="stopScroll()">Stop Scroll</button><br />
 <button class="btn-blue" id="btnScroll" style="position:absolute;z-index:100; right:130px; bottom:20px;" onclick="testScroll()">Test Scroll</button><br />
 <button id="btnRefresh" style="position:absolute;z-index:100; right:20px; bottom:20px;" onclick="location.reload(true)"><span class="appicon appicon-refresh"></span> RELOAD</button>
 
@@ -99,6 +100,9 @@ var app = new App();
 app.init();
 
 document.getElementById('btnRefresh').enableTap();
+document.getElementById('btnScroll').enableTap();
+document.getElementById('btnScrollStop').enableTap();
+
 
 function testAnimate() {
     var properties = {
@@ -123,8 +127,39 @@ function testJQAnimate() {
 	$('#main-view').animate({left: 300 }, 1000);
 }
 
+function stopScroll() {
+	//app.currentView.scroller._stopScrolling();
+	
+	var el = document.getElementById('scroll_console');
+	// el.style.transition = "all 0ms";
+	var x = 0, y = 0;
+
+	// el.style.transform = 'translate('+x+'px, '+y+'px) translateZ(0)';
+	// el.style.WebkitTransform = 'translate('+x+'px, '+y+'px)';
+	//el.style.top = '0px';
+	// el.style.MsTransform = 'translate('+x+'px, '+y+'px) translateZ(0)'
+	
+	
+	// el.style.top = '0px';
+	el.style.WebkitTransition = "1ms linear";
+	el.style.WebkitTransform = 'translate(0px, 0px)';
+}
+
 function testScroll() {
-	app.currentView.scroller._move(0, -200, {speed:200, easing:'circular'});
+	var el = document.getElementById('scroll_console');
+	el.style.WebkitTransition = "all 3000ms linear";
+	// el.style.transition = "all 3000ms";
+	var x = 0, y = 500;
+
+	//el.style.top = '500px';
+
+	// el.style.transform = 'translate('+x+'px, '+y+'px) translateZ(0)';
+	el.style.WebkitTransform = 'translate('+x+'px, '+y+'px)';
+	// el.style.top = y+'px';
+	// el.style.MsTransform = 'translate('+x+'px, '+y+'px) translateZ(0)'
+	
+
+	// app.currentView.scroller.scrollTo(0, -3000, {speed: 4000, easing:'circular'});
 
 	// return;
 	// var el = document.getElementById('scrollwrapper');

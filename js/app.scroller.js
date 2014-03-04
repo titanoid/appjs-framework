@@ -29,7 +29,6 @@ utils.easing = {
 	}
 
 function AppScroller(wrapper, settings) {
-	console.log('appjsframework');
 	this.wrapper = wrapper;
 
 	this.settings = settings;
@@ -204,6 +203,7 @@ AppScroller.prototype._touchEnd = function(event) {
 	var curr_pos = this._getTouchPosition(event);
 	
 	var momentum = this._getMomentum(curr_pos);
+	document.getElementById('scroll_console').innerHTML = momentum.duration;
 
 	if (momentum.duration > 0)
 		this.scrollTo( momentum.destX, momentum.destY, {speed: momentum.duration, easing: momentum.easing} );
@@ -281,9 +281,12 @@ AppScroller.prototype._getMomentum = function(curr_pos) {
 		dist_y = Math.abs(dest_y - this.scrollPosition.y);
 		duration_x = speedX == 0 ? 0 : Math.round(dist_x / speedX);
 		duration_y = speedY == 0 ? 0 : Math.round(dist_y / speedY);
+
+		duration_x = Math.max(duration_x, Math.abs(this._maxScrollX / 10));
+		duration_y = Math.max(duration_y, Math.abs(this._maxScrollY / 10));
+
 		duration = Math.max(duration_x, duration_y);
 	}
-
 
 	return {
 			destX: dest_x,
@@ -372,20 +375,13 @@ AppScroller.prototype._move = function(x, y, animate) {
 	}
 }
 
-AppScroller.prototype._stopScrolling = function() {
-	var curr_scroll_pos = this._getCurrentPosition();
-	this.scrollTo(curr_scroll_pos.x, curr_scroll_pos.y);
-}
-
 AppScroller.prototype._animateEnd = function() {
 	var curr_scroll_pos = this._getCurrentPosition();
-	// document.getElementById('scroll_console').innerHTML = curr_scroll_pos.x+' : '+curr_scroll_pos.y;
 	this.scrollTo(curr_scroll_pos.x, curr_scroll_pos.y);
-	// alert(curr_scroll_pos.x+' : '+curr_scroll_pos.y);
 
 	if (this._useTransition) {
-		this.wrapper.style.webkitTransition = "none";
-		this.wrapper.style.transition = "none";
+		this.wrapper.style.webkitTransition = "1ms";
+		this.wrapper.style.transition = "1ms";
 	}
 
 	this.scrollPosition.x = curr_scroll_pos.x;
@@ -452,7 +448,7 @@ AppScroller.prototype._stopTrackPosition = function() {
 
 AppScroller.prototype._getCurrentPosition = function() {
 	
-	var computedStyle = window.getComputedStyle(this.tmp_el);
+	var computedStyle = window.getComputedStyle(this.tmp_el, null);
 	if (this._useTransform) {
 		var val = computedStyle.webkitTransform || computedStyle.transform;
 		val = val.split(')')[0].split(', ');
@@ -473,7 +469,6 @@ AppScroller.prototype.refresh = function() {
 		this.hasScroll.x = true;
 
 	this._maxScrollY = this.wrapper.parentNode.clientHeight - this.wrapper.clientHeight;
-	console.log(this._maxScrollY);
 	if (this._maxScrollY >= 0) {
 		this.hasScroll.y = false;
 		this._maxScrollY = 0;
