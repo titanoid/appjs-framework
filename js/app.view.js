@@ -28,10 +28,10 @@ function AppView(view, appref) {
     this.state = 'hidden';
 
 
-    this.onAfterShow = createEvent('onViewAfterShow');
-    this.onAfterHide = createEvent('onViewAfterHide');
-    this.onBeforeShow = createEvent('onViewBeforeShow');
-    this.onBeforeHide = createEvent('onViewBeforeHide');
+    this.onAfterShow = Utils.createEvent('onViewAfterShow');
+    this.onAfterHide = Utils.createEvent('onViewAfterHide');
+    this.onBeforeShow = Utils.createEvent('onViewBeforeShow');
+    this.onBeforeHide = Utils.createEvent('onViewBeforeHide');
 
     if (typeof view.dataset.onbeforeshow != 'undefined') {
         this.wrapper.addEventListener('onViewBeforeShow', window[view.dataset.onbeforeshow]);
@@ -88,10 +88,26 @@ AppView.prototype.initScroller = function() {
     scroll_settings.scrollx = (this.wrapper.dataset.scrollx == 'true' ? true : false);
     scroll_settings.scrolly = (this.wrapper.dataset.scrolly == 'true' ? true : false);
     scroll_settings.bounce = (this.wrapper.dataset.scrollbounce == 'true' ? true : false);
+    scroll_settings.onscroll = (this.wrapper.dataset.onscroll != '' ? this.wrapper.dataset.onscroll : false);
     
     this.scroller = new AppScroller(this.body.getElementsByClassName('view-body-inner')[0], scroll_settings);
-
     // this.scroller.init();
+}
+
+AppView.prototype.bodyContent = function(content) {
+    if (typeof content == 'undefined') {
+        var body_content = this.scroller == null ? this.body.innerHTML : this.scroller.wrapper.innerHTML;
+        return body_content;
+    }
+    else {
+        if (this.scroller == null) {
+            this.body.innerHTML = content;
+        }
+        else {
+            this.scroller.wrapper.innerHTML = content;
+            this.scroller.refresh();
+        }
+    }
 }
 
 AppView.prototype.beforeShow = function() {
@@ -128,9 +144,7 @@ AppView.prototype.beforeHide = function() {
     this.state = 'hiding';
     this.wrapper.style.zIndex = 1;
     this.wrapper.dispatchEvent(this.onBeforeHide);
-
 }
-
 
 AppView.prototype.show = function(currentView) {
     if (this.state != 'hidden')
@@ -145,14 +159,13 @@ AppView.prototype.show = function(currentView) {
     this.beforeShow();    
 
     var objref = this;
+    objref.wrapper.style.transition = 'all 200ms';
+    objref.wrapper.style.WebkitTransition = 'all 200ms';
     setTimeout(function(){
-        objref.wrapper.style.transition = 'all 200ms';
-        objref.wrapper.style.WebkitTransition = 'all 200ms';
         objref.wrapper.addEvent('webkitTransitionEnd', function() { objref.afterShow(); } );
         objref.wrapper.style.opacity = '1';
         // objref.wrapper.style.webkitTransform = 'translateX(0px)';
-    }, 1);
-
+    }, 100);
 }
 
 AppView.prototype.hide = function() {
@@ -218,6 +231,8 @@ AppView.prototype.touchstart = function(event) {
     this.touch_start_x = event.touches[0].clientX;
     this.touch_start_y = event.touches[0].clientY;
 
+    Utils.stopPropagation(event);
+
     //this.appref.currentView.wrapper.style.webkitTransform = 'translateZ(0)';
 }
 
@@ -275,6 +290,7 @@ AppView.prototype.touchmove = function(event) {
             this.wrapper.style.webkitTransform = 'translateX('+(this.leftsp.width - Math.abs(this.touch_distance_x))+'px)';   
     }
 
+    Utils.stopPropagation(event);
 }
 
 AppView.prototype.touchend = function(event) {
@@ -310,5 +326,5 @@ AppView.prototype.touchend = function(event) {
         objref.touch_distance_y = null;
         objref.is_swipe = false;
     }, 1);
-  
+    Utils.stopPropagation(event);
 }

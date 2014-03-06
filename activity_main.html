@@ -5,19 +5,34 @@
 <script src="http://dev.appjsframework.com/lib/jquery.min.js"></script>
 <script src="http://dev.appjsframework.com/lib/iscroll.js"></script>
 <script src="http://dev.appjsframework.com/js/app.js"></script>
+<script src="http://dev.appjsframework.com/js/app.dom.js"></script>
+<script src="http://dev.appjsframework.com/js/app.utils.js"></script>
 <script src="http://dev.appjsframework.com/js/app.view.js"></script>
 <script src="http://dev.appjsframework.com/js/app.sidepanel.js"></script>
 <script src="http://dev.appjsframework.com/js/app.scroller.js"></script>
 
-<button class="btn-blue" id="btnScrollStop" style="position:absolute;z-index:100; right:230px; bottom:20px;" onclick="stopScroll()">Stop Scroll</button><br />
-<button class="btn-blue" id="btnScroll" style="position:absolute;z-index:100; right:130px; bottom:20px;" onclick="testScroll()">Test Scroll</button><br />
 <button id="btnRefresh" style="position:absolute;z-index:100; right:20px; bottom:20px;" onclick="location.reload(true)"><span class="appicon appicon-refresh"></span> RELOAD</button>
 
-<div class="app-view" id="about-view" data-url="about" data-scrollx="true" data-scrolly="true" data-scrollbounce="true">
-	<div style="z-index: 10; background-color:#fff; position:absolute; top: 1px; right: 1px; width: 150px; border:1px solid #000;" id="scroll_console">
-		console
-	</div>
+<div class="app-view" id="main-view" data-url="home" data-swipeleftsp="true" data-swiperightsp="true">
+	<ul class="view-header">
+		<li class="button" onclick="app.sidepanels.left.toggle()"><span class="appicon appicon-align-justify"></span> Title</li>
+	</ul>
+    
+    <div class="view-body">
+    	<h1>Buttons</h1>
+    	<button onclick="app.navigate('#about')">Default Button</button>
+    	<button class="btn-blue" onclick="app.navigate('#about')">Blue Button</button>
+    	<h1>Side Panels</h1>
+    	<button class="btn-blue" onclick="app.sidepanels.left.toggle()">Toggle Left</button>
+    	<button class="btn-blue" onclick="app.sidepanels.right.toggle()">Toggle Right</button>
+    	<h1>animate</h1>
+    	<button class="btn-blue" id="btnAnimate" onclick="testAnimate()">Animate</button>
+    	<button class="btn-blue" id="btnAnimate" onclick="testJQAnimate()">JQ Animate</button>
 
+    </div>
+</div>
+
+<div class="app-view" id="scroller-view" data-url="scroller" data-onscroll="onScrollTest" data-scrollx="true" data-scrolly="true" data-scrollbounce="true">
 	<ul class="view-header">
 		<li class="button" onclick="app.navigate('#home')"><span class="appicon appicon-chevron-left"></span> Home</li>
 	</ul>
@@ -67,29 +82,16 @@
     </div>
 </div>
 
-
-<div class="app-view" id="main-view" data-url="home" data-swipeleftsp="true" data-swiperightsp="true">
-	<ul class="view-header">
-		<li class="button" onclick="app.sidepanels.left.toggle()"><span class="appicon appicon-align-justify"></span> Title</li>
-	</ul>
-    
-    <div class="view-body">
-    	<h1>Buttons</h1>
-    	<button onclick="app.navigate('#about')">Default Button</button>
-    	<button class="btn-blue" onclick="app.navigate('#about')">Blue Button</button>
-    	<h1>Side Panels</h1>
-    	<button class="btn-blue" onclick="app.sidepanels.left.toggle()">Toggle Left</button>
-    	<button class="btn-blue" onclick="app.sidepanels.right.toggle()">Toggle Right</button>
-    	<h1>animate</h1>
-    	<button class="btn-blue" id="btnAnimate" onclick="testAnimate()">Animate</button>
-    	<button class="btn-blue" id="btnAnimate" onclick="testJQAnimate()">JQ Animate</button>
-
-    </div>
-</div>
-
-
 <div class="app-sidepanel app-sidepanel-left" id="main-sidepanel" data-position="left">
-	left sidepanel
+	<div class="app-sidepanel-inner">
+		<ul class="sidepanel-menu">
+			<li class="menu-title">Components</li>
+			<li onclick="app.navigate('#home')">Home</li>
+			<li onclick="app.navigate('#scroller')">Scroller</li>
+			<li>Sidepanels</li>
+			<li>Buttons</li>
+		</ul>
+	</div>
 </div>
 
 <div class="app-sidepanel app-sidepanel-right" id="right-sidepanel"  style="width:100px !important;" data-position="right">
@@ -102,76 +104,23 @@ var app = new App();
 app.init();
 
 document.getElementById('btnRefresh').enableTap();
-document.getElementById('btnScroll').enableTap();
-document.getElementById('btnScrollStop').enableTap();
 
+var i = 20;
 
-function testAnimate() {
-    var properties = {
-        webkitTransform : { start: 0, end: 300, easing: 'easeInOutQuad', pattern: 'translateX(%val%px)' }
-        // left : { start: 0, end: 300 }
-    }
-
-    var callbacks = {
-        onFinish : function() {
-            // console.log('finish');
-        },
-
-        onProgress: function(progress) {
-            // console.log('Current progress: '+progress);
-        }
-    }
-    var el = document.getElementById('main-view');
-    el.animate(properties, 1000);
+function onScrollTest(e) {
+	//var pos = app.currentView.scroller.getScrollPosition();
+	
+	// console.log(pos);
 }
 
-function testJQAnimate() {
-	$('#main-view').animate({left: 300 }, 1000);
+
+
+function getNewContent() {
+	var content = '';
+	for(i=20; i<200; i++) {
+		content = content + '<strong>('+i+').</strong> line ....<br/>';
+	}
+	return content;
 }
 
-function stopScroll() {
-	//app.currentView.scroller._stopScrolling();
-	
-	var el = document.getElementById('scroll_console');
-	// el.style.transition = "all 0ms";
-	var x = 0, y = 0;
-
-	// el.style.transform = 'translate('+x+'px, '+y+'px) translateZ(0)';
-	// el.style.WebkitTransform = 'translate('+x+'px, '+y+'px)';
-	//el.style.top = '0px';
-	// el.style.MsTransform = 'translate('+x+'px, '+y+'px) translateZ(0)'
-	
-	
-	// el.style.top = '0px';
-	el.style.WebkitTransition = "1ms linear";
-	el.style.WebkitTransform = 'translate(0px, 0px)';
-}
-
-function testScroll() {
-	var el = document.getElementById('scroll_console');
-	el.style.WebkitTransition = "all 3000ms linear";
-	// el.style.transition = "all 3000ms";
-	var x = 0, y = 500;
-
-	//el.style.top = '500px';
-
-	// el.style.transform = 'translate('+x+'px, '+y+'px) translateZ(0)';
-	el.style.WebkitTransform = 'translate('+x+'px, '+y+'px)';
-	// el.style.top = y+'px';
-	// el.style.MsTransform = 'translate('+x+'px, '+y+'px) translateZ(0)'
-	
-
-	// app.currentView.scroller.scrollTo(0, -3000, {speed: 4000, easing:'circular'});
-
-	// return;
-	// var el = document.getElementById('scrollwrapper');
-
-	// var properties = {
-	// 	webkitTransform : { start: 0, end: -1500, pattern:'translateY(%val%px)', easing: 'easeOutCirc' }
-	// }
- // 	el.animate(properties, 800);
-
- 	// el.style.webkitTransition = '500ms cubic-bezier(0.1, 0.57, 0.1, 1)';
- 	// el.style.webkitTransform = 'translate(0px, -700px) translateZ(0px)';
-}
 </script>

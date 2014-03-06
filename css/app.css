@@ -32,6 +32,7 @@ body {
     height: 100%;
     background-color: #e4e4e4;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
     overflow: hidden;
     visibility: hidden;
 
@@ -68,12 +69,14 @@ ul.view-header {
     background-color: #dddddd;
     border-bottom: 2px solid #cccccc;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
 }
 
 ul.view-header li {
     display: block;
     height: 100%;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
     float: left;
     margin-right: 5px;
     padding: 9px 5px;
@@ -92,6 +95,7 @@ ul.view-header li.button:active {
     position: absolute;
     left: 0px;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
     width: 100%;
     background-color: #e4e4e4;
     /*border: 1px solid red;*/
@@ -100,6 +104,7 @@ ul.view-header li.button:active {
 }
 .view-body-inner {
    box-sizing: border-box;
+   -moz-box-sizing: border-box;
    padding: 10px;
    /*width: 1000px;*/
 }
@@ -113,16 +118,41 @@ ul.view-header li.button:active {
   height: 100%;
   visibility: hidden;
   background-color: #555;
+  color: #fff;
   box-sizing: border-box;
+  -moz-box-sizing:border-box;;
 }
 
-.app-sidepanel-left {
-  /*border-right: 2px solid #444;*/
+.app-sidepanel-inner {
+  
 }
 
-.app-sidepanel-right {
-  /*border-left: 2px solid #444;*/
+.app-sidepanel .sidepanel-menu {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
 }
+
+.app-sidepanel .sidepanel-menu li {
+  margin: 0px;
+  padding: 0px;
+  padding: 10px;
+  border-bottom: 1px solid #333;
+  color: #eee;
+  font-size: 16px;
+  cursor: pointer;
+}
+.app-sidepanel .sidepanel-menu li.menu-title {
+  padding: 11px 10px;
+  background-color: #444;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: default;
+}
+.app-sidepanel .sidepanel-menu li:active {
+  background-color: #444;
+}
+
 
 .iScrollVerticalScrollbar {
   position: absolute;
@@ -151,6 +181,7 @@ ul.view-header li.button:active {
 }
 .iScrollIndicator {
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
   position: absolute;
   background-color: rgba(0, 0, 0, 0.47);;
   border-top-left-radius: 3px;

@@ -9,18 +9,20 @@ function AppSidePanel(sidepanel, appref) {
     this.wrapper.style.zIndex = 0;
 
     this.wrapper.style.top = '0px';
-    if (this.position == 'right')
-        this.wrapper.style.left = (window.innerWidth - this.width)+'px';
+    if (this.position == 'right') {
+        this.wrapper.style.left = '100%';
+        this.wrapper.style.marginLeft = '-'+this.width+'px';
+    }
     if (this.position == 'left')
         this.wrapper.style.left = '0px';
 
 
     this.state = 'hidden';
 
-    this.onAfterShow = createEvent('onSidepanelAfterShow');
-    this.onAfterHide = createEvent('onSidepanelAfterHide');
-    this.onBeforeShow = createEvent('onSidepanelBeforeShow');
-    this.onBeforeHide = createEvent('onSidepanelBeforeHide');
+    this.onAfterShow = Utils.createEvent('onSidepanelAfterShow');
+    this.onAfterHide = Utils.createEvent('onSidepanelAfterHide');
+    this.onBeforeShow = Utils.createEvent('onSidepanelBeforeShow');
+    this.onBeforeHide = Utils.createEvent('onSidepanelBeforeHide');
     
     if (typeof sidepanel.dataset.onbeforeshow != 'undefined') {
         this.wrapper.addEventListener('onSidepanelBeforeShow', window[sidepanel.dataset.onbeforeshow]);
@@ -39,6 +41,14 @@ function AppSidePanel(sidepanel, appref) {
     }
     //////////////////////
     this.viewCover = null;
+
+    if ('ontouchstart' in window) {
+        var elements = this.wrapper.getElementsByTagName('*');
+        for(var i=0; i<elements.length; i++) {
+            //console.log(elements[i].tagName+' '+i);
+            elements[i].enableTap();
+        }
+    }
 }
 
 AppSidePanel.prototype.beforeShow = function() {
@@ -49,10 +59,11 @@ AppSidePanel.prototype.beforeShow = function() {
 }
 
 AppSidePanel.prototype.show = function() {
-    if (this.state == 'visible')
+    if (this.state == 'visible' || (this.appref.currentSidepanel != null && this.appref.currentSidepanel != this))
         return;
-    if (this.appref.currentSidepanel != null && this.appref.currentSidepanel != this)
-        this.appref.currentSidepanel.hide();
+
+    // if (this.appref.currentSidepanel != null && this.appref.currentSidepanel != this)
+    //     this.appref.currentSidepanel.hide();
     
     this.beforeShow();
 
@@ -67,7 +78,7 @@ AppSidePanel.prototype.show = function() {
             objref.appref.currentView.wrapper.style.webkitTransform = 'translateX('+objref.width+'px)';
         if (objref.position == 'right')
             objref.appref.currentView.wrapper.style.webkitTransform = 'translateX(-'+objref.width+'px)';
-    },100);
+    },1);
 }
 
 AppSidePanel.prototype.afterShow = function() {
@@ -93,9 +104,10 @@ AppSidePanel.prototype.hide = function() {
     var objref = this;
     this.appref.currentView.wrapper.style.transition = 'all 200ms ease-in-out';
     this.appref.currentView.wrapper.style.WebkitTransition = 'all 200ms ease-in-out';
-    this.appref.currentView.wrapper.addEvent('webkitTransitionEnd', function() { objref.afterHide(); } );
+    
 
     setTimeout(function(){
+        objref.appref.currentView.wrapper.addEvent('webkitTransitionEnd', function() { objref.afterHide(); } );
         if (objref.position == 'left') {
             objref.appref.currentView.wrapper.style.webkitTransform = 'translateX(0px)';
             objref.appref.currentView.wrapper.style.transform = 'translateX(0px)';
@@ -104,7 +116,7 @@ AppSidePanel.prototype.hide = function() {
             objref.appref.currentView.wrapper.style.webkitTransform = 'translateX(0px)';
             objref.appref.currentView.wrapper.style.transform = 'translateX(0px)';
         }
-    },100);
+    },10);
 }
 
 AppSidePanel.prototype.afterHide = function() {

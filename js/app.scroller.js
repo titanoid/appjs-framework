@@ -38,6 +38,7 @@ function AppScroller(wrapper, settings) {
 	this.hasScroll.x = this.settings.scrollx || false;
 	this.hasScroll.y = this.settings.scrolly || false;
 
+	this.settings.onscroll = this.settings.onscroll || false;
 
 	//set starting scroll position
 	this.scrollPosition = {x:0, y:0}
@@ -70,7 +71,6 @@ function AppScroller(wrapper, settings) {
 
 
 	this.init();
-
 }
 
 AppScroller.prototype._hasTransform = function() {
@@ -105,9 +105,7 @@ AppScroller.prototype._getTouchPosition = function(event) {
 	return pos;
 }
 
-
 AppScroller.prototype.init = function() {
-
 	if (this._useTransform && this._useTransition) {
 		this.wrapper.style.transform = 'translateZ(0)';
 		this.wrapper.style.WebkitTransform = 'translateZ(0)';
@@ -125,9 +123,6 @@ AppScroller.prototype.init = function() {
 		this.wrapper.style.MozPerspective = '1000';
 		this.wrapper.style.MsPerspective = '1000';
 	}
-
-		
-	this.scrollTo(0, 0);
 
 	var objref = this;
 
@@ -149,9 +144,13 @@ AppScroller.prototype.init = function() {
 	    this.wrapper.addEventListener('MSTransitionEnd', function(event) { objref._animateEnd(event); });
 	}
 
+	this.onscroll = Utils.createEvent('onScroll');
+
+	if (typeof window[this.settings.onscroll] == 'function') {
+		this.wrapper.addEventListener('onScroll', window[this.settings.onscroll]);
+	}
 
 	this.tmp_el = document.getElementsByClassName('view-body-inner')[0];
-
 }
 
 AppScroller.prototype._touchStart = function(event) {
@@ -201,17 +200,20 @@ AppScroller.prototype._touchEnd = function(event) {
 	this._isTouching = false;
 	
 	var curr_pos = this._getTouchPosition(event);
+
 	
-	var momentum = this._getMomentum(curr_pos);
-	document.getElementById('scroll_console').innerHTML = momentum.duration;
-
-	if (momentum.duration > 0)
-		this.scrollTo( momentum.destX, momentum.destY, {speed: momentum.duration, easing: momentum.easing} );
-	else 
+	var momentum = {duation:0};
+	
+	if (this.scrollPosition.x > 0 || this.scrollPosition.x < this._maxScrollX || this.scrollPosition.y > 0 || this.scrollPosition.y < this._maxScrollY) {
 		this._isScrolling = false;
-
-
-	this._bounceBack();
+		this._bounceBack();
+	}
+	else {
+		momentum = this._getMomentum(curr_pos);
+		// document.getElementById('scroll_console').innerHTML = momentum.duration;
+		if (momentum.duration > 0)
+			this.scrollTo( momentum.destX, momentum.destY, {speed: momentum.duration, easing: momentum.easing} );	
+	}
 
 
 	this._touchStartPos.x = null;
@@ -282,8 +284,11 @@ AppScroller.prototype._getMomentum = function(curr_pos) {
 		duration_x = speedX == 0 ? 0 : Math.round(dist_x / speedX);
 		duration_y = speedY == 0 ? 0 : Math.round(dist_y / speedY);
 
-		duration_x = Math.max(duration_x, Math.abs(this._maxScrollX / 10));
-		duration_y = Math.max(duration_y, Math.abs(this._maxScrollY / 10));
+		if (duration_x != 0)
+			duration_x = Math.max(duration_x, Math.abs(dist_x / 10));
+
+		if (duration_y != 0)
+			duration_y = Math.max(duration_y, Math.abs(dist_y / 10));
 
 		duration = Math.max(duration_x, duration_y);
 	}
@@ -297,7 +302,8 @@ AppScroller.prototype._getMomentum = function(curr_pos) {
 }
 
 AppScroller.prototype.scrollTo = function(x, y, animate_data) {
-	
+	this.wrapper.dispatchEvent(this.onscroll);
+
 	var scrollByX = this.scrollPosition.x - x;
 	var scrollByY = this.scrollPosition.y - y;
 
@@ -432,14 +438,12 @@ AppScroller.prototype._bounceBack = function() {
 
 AppScroller.prototype._startTrackPosition = function() {
 	var cons = document.getElementById('scroll_console');
-	// var objref = this;
-	// if (this._isScrolling) {
-	//     objref._trackingTimer = setInterval(function() {
-	//     	var pos = objref._getCurrentPosition();
-	//     	//cons.innerHTML = pos.x+' : '+pos.y;
-	//     	// console.log(pos);
-	//     }, 100);
-	// }
+	var objref = this;
+	if (this._isScrolling) {
+	    objref._trackingTimer = setInterval(function() {
+	    	objref.wrapper.dispatchEvent(objref.onscroll);
+	    }, 100);
+	}
 }
 
 AppScroller.prototype._stopTrackPosition = function() {
@@ -456,6 +460,13 @@ AppScroller.prototype._getCurrentPosition = function() {
 		var posy = val[13] || val[5];
 		var pos = {x: Math.round(posx), y: Math.round(posy) }
 	}
+	return pos;
+}
+
+AppScroller.prototype.getScrollPosition = function() {
+	var pos = this._getCurrentPosition();
+	pos.x_progress = this._maxScrollX != 0 ? Math.abs(pos.x / this._maxScrollX) * 100 : 0;
+	pos.y_progress = this._maxScrollY != 0 ? Math.abs(pos.y / this._maxScrollY) * 100 : 0;
 	return pos;
 }
 
