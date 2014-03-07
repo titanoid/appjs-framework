@@ -208,6 +208,7 @@ AppView.prototype.afterHide = function() {
 AppView.prototype.adjust = function() {
     this.wrapper.style.left = '0px';
     this.wrapper.style.top = '0px';
+    this.wrapper.width = window.innerWidth + 'px';
     
     this.body.style.left = '0px';
     this.body.style.width = '100%';
@@ -231,6 +232,7 @@ AppView.prototype.touchstart = function(event) {
     this.touch_start_x = event.touches[0].clientX;
     this.touch_start_y = event.touches[0].clientY;
 
+    Utils.cancelEvent(event);
     Utils.stopPropagation(event);
 
     //this.appref.currentView.wrapper.style.webkitTransform = 'translateZ(0)';
@@ -289,7 +291,7 @@ AppView.prototype.touchmove = function(event) {
         if (this.touch_distance_x < 0 && Math.abs(this.touch_distance_x) <= this.leftsp.width && this.touch_sp.position == 'left')
             this.wrapper.style.webkitTransform = 'translateX('+(this.leftsp.width - Math.abs(this.touch_distance_x))+'px)';   
     }
-
+    Utils.cancelEvent(event);
     Utils.stopPropagation(event);
 }
 

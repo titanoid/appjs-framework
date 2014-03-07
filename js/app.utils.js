@@ -2,7 +2,10 @@ var Utils = {
 	
 	stopPropagation : function(e) {
 		e.stopPropagation();
-	},
+  },
+  cancelEvent : function(e) {
+    e.preventDefault();
+  },
 
 	createEvent : function(event_name) {
 	    var event;
@@ -17,8 +20,6 @@ var Utils = {
 	    event.eventName = event_name;
 	    return event;
 	},
-
-
 }
 
 if (!Object.keys) {

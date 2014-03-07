@@ -1,7 +1,8 @@
 <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 
-
 <link href="http://dev.appjsframework.com/css/app.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="http://dev.appjsframework.com/css/app.icons.css" media="screen" rel="stylesheet" type="text/css" />
+
 <script src="http://dev.appjsframework.com/lib/jquery.min.js"></script>
 <script src="http://dev.appjsframework.com/lib/iscroll.js"></script>
 <script src="http://dev.appjsframework.com/js/app.js"></script>
@@ -25,9 +26,14 @@
     	<h1>Side Panels</h1>
     	<button class="btn-blue" onclick="app.sidepanels.left.toggle()">Toggle Left</button>
     	<button class="btn-blue" onclick="app.sidepanels.right.toggle()">Toggle Right</button>
-    	<h1>animate</h1>
-    	<button class="btn-blue" id="btnAnimate" onclick="testAnimate()">Animate</button>
-    	<button class="btn-blue" id="btnAnimate" onclick="testJQAnimate()">JQ Animate</button>
+    	<h1>Spinner</h1>
+    	<button class="btn-blue" id="btnAnimate" onclick="app.showSpinner()">Show Spinner</button>
+    	<button class="btn-blue" id="btnAnimate" onclick="app.hideSpinner()">Hide Spinner</button>
+
+
+    	<h1>Ajax Call</h1>
+    	<button class="btn-blue" id="btnAnimate" onclick="ajaxTest()">Load</button>
+    	<button class="btn-blue" id="btnAnimate" onclick="app.navigate('#test')">Load Remote View</button>
 
     </div>
 </div>
@@ -114,7 +120,6 @@ function onScrollTest(e) {
 }
 
 
-
 function getNewContent() {
 	var content = '';
 	for(i=20; i<200; i++) {
@@ -122,5 +127,17 @@ function getNewContent() {
 	}
 	return content;
 }
+
+function ajaxTest() {
+	var settings = {
+		json: false,
+		spinner: true,
+		callback: function(data) {
+			alert(data);
+		}
+	}
+	app.ajax('http://dev.appjsframework.com/api.php', settings);
+}
+
 
 </script>

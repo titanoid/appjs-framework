@@ -5,7 +5,11 @@ function App() {
     this.sidepanels = { left: null, right: null};
     this.currentSidepanel = null;
 
+    this.spinner = null;
+
     this.location = {path:'', params:null};
+
+    this.remoteViewPath = 'http://dev.appjsframework.com/views/%view-url%.html';
 }
 
 App.prototype.init = function() {
@@ -55,19 +59,34 @@ App.prototype.goBack = function() {
 }
 
 App.prototype.doRoute = function(url) {
+    console.log(url);
     var urldata = this.parseUrl(url);
-    this.location.path = urldata.path;
-    this.location.params = urldata.params;
-    // alert(this.location.path);
-
-    view = this.getViewByURL(this.location.path);
+    view = this.getViewByURL(urldata.path);
 
     if (view != null) {
+        this.location.path = urldata.path;
+        this.location.params = urldata.params;
         this.showView(view.id);
     }
     else {
-        alert('invalid url : '+url);
-        this.navigate('');
+        var objref = this;
+        //load remote view if not found locally
+        var remote_url = this.remoteViewPath.replace('%view-url%', urldata.path);
+        var ajax_settings = {
+            spinner: true,
+            json: false,
+            callback : function(data) {
+                if (data) {
+                    document.write(data);
+                    objref.navigate(url);
+                }
+                else {
+                    alert('invalid url : '+url);
+                    objref.navigate('');
+                }
+            }
+        }
+        this.ajax(remote_url, ajax_settings);
     }
 
     return false;
@@ -147,4 +166,80 @@ App.prototype.getViewByURL = function(url) {
             return this.views[i];
     }
     return null;
+}
+
+App.prototype.showSpinner = function(dropshadow) {
+    if (this.spinner != null)
+        return;
+
+
+    this.spinner = document.createElement('DIV');
+    this.spinner.addClass('app-spinner');
+    var loading = document.createElement('DIV');
+    loading.addClass('loading');
+    this.spinner.appendChild(loading);
+
+    dropshadow = dropshadow || false;
+    
+    if (dropshadow) {
+        this.spinner.addClass('app-spinner-dropshadow');
+    }
+
+    document.body.appendChild(this.spinner);
+}
+
+App.prototype.hideSpinner = function() {
+    if (this.spinner == null)
+        return;
+
+    var objref = this;
+    var loading = this.spinner.getElementsByClassName('loading')[0];
+    loading.style.visibility = 'hidden';
+    setTimeout(function() {
+        objref.spinner.parentNode.removeChild(objref.spinner);    
+        objref.spinner = null;
+    }, 1);
+}
+
+
+App.prototype.ajax = function(url, settings) {
+    settings = settings || {};
+
+    var callback = settings.callback || false;
+    var json = settings.json || false;
+    var spinner = settings.spinner || false;
+
+    var xmlhttp = new XMLHttpRequest();
+
+    if (spinner)
+        this.showSpinner(true);
+
+    var objref = this;
+    // Callback function when XMLHttpRequest is ready
+    xmlhttp.onreadystatechange=function() {
+        if(xmlhttp.readyState === 4) {
+            if (xmlhttp.status === 200) {
+                if (spinner)
+                    objref.hideSpinner();
+                if (json)
+                    var data = JSON.parse(xmlhttp.responseText);
+                else
+                    var data = xmlhttp.responseText;
+
+                if (typeof callback == 'function')
+                    callback.call(this, data);
+                else
+                    window[callback](data);
+            }
+            else {
+                if (typeof callback == 'function')
+                    callback.call(this, false);
+                else
+                    window[callback](false);
+            }
+        }
+    };
+
+    xmlhttp.open("GET", url , true);
+    xmlhttp.send();
 }
