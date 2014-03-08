@@ -9,7 +9,7 @@ function App() {
 
     this.location = {path:'', params:null};
 
-    this.remoteViewPath = 'http://dev.appjsframework.com/views/%view-url%.html';
+    this.remoteViewPath = 'http://dev.appjsframework.com/view.php?id=%view-url%';
 }
 
 App.prototype.init = function() {
@@ -59,7 +59,6 @@ App.prototype.goBack = function() {
 }
 
 App.prototype.doRoute = function(url) {
-    console.log(url);
     var urldata = this.parseUrl(url);
     view = this.getViewByURL(urldata.path);
 
@@ -74,11 +73,16 @@ App.prototype.doRoute = function(url) {
         var remote_url = this.remoteViewPath.replace('%view-url%', urldata.path);
         var ajax_settings = {
             spinner: true,
+            spinnerShadow: false,
             json: false,
             callback : function(data) {
                 if (data) {
                     document.write(data);
-                    objref.navigate(url);
+                    setTimeout(function() {
+                        var view = objref.addViewByUrl(urldata.path);
+                        objref.showView(view.id);
+                    }, 10);
+                    
                 }
                 else {
                     alert('invalid url : '+url);
@@ -118,6 +122,16 @@ App.prototype.parseUrl = function(url) {
 App.prototype.addView  = function(view) {
     var appview = new AppView(view, this);
     this.views.push(appview);
+}
+
+App.prototype.addViewByUrl = function(url) {
+    var views = document.getElementsByClassName('app-view');
+    for(var i=0; i<views.length; i++) {
+        if (views[i].dataset.url == url) {
+            this.addView(views[i]);
+            return views[i];
+        }
+    }
 }
 
 App.prototype.currentSidepanel = function() {
@@ -160,7 +174,6 @@ App.prototype.getView = function(id) {
 App.prototype.getViewByURL = function(url) {
     if (url == '')
         return this.views[0];
-
     for(var i=0; i<this.views.length; i++) {
         if (this.views[i].url == url)
             return this.views[i];
@@ -208,11 +221,12 @@ App.prototype.ajax = function(url, settings) {
     var callback = settings.callback || false;
     var json = settings.json || false;
     var spinner = settings.spinner || false;
+    var spinnerShadow = settings.spinnerShadow || false;
 
     var xmlhttp = new XMLHttpRequest();
 
-    if (spinner)
-        this.showSpinner(true);
+    if (spinner) 
+        this.showSpinner(spinnerShadow);
 
     var objref = this;
     // Callback function when XMLHttpRequest is ready

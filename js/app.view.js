@@ -196,7 +196,7 @@ AppView.prototype.afterShow = function() {
         this.scroller.scrollTo(0, 0);
     }
     else {
-        var myScroll = new IScroll(this.body, {mouseWheel: true, scrollbars: 'custom', scrollX: true, scrollY:true, fadeScrollbars:true, bounce:true});
+        // var myScroll = new IScroll(this.body, {mouseWheel: true, scrollbars: 'custom', scrollX: true, scrollY:true, fadeScrollbars:true, bounce:true});
     }
 }
 
