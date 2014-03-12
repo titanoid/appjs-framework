@@ -37,6 +37,10 @@ function AppScroller(wrapper, settings) {
 	this.hasScroll = {};
 	this.hasScroll.x = this.settings.scrollx || false;
 	this.hasScroll.y = this.settings.scrolly || false;
+	
+	this._disableScrollbars = this.settings.scrollbars || false;
+	this.scrollbars = {x:false, y:false}
+	
 
 	this.settings.onscroll = this.settings.onscroll || false;
 
@@ -50,6 +54,8 @@ function AppScroller(wrapper, settings) {
 
 	//mixed settings
 	this._enableBounce = this.settings.bounce == true ? true : false;
+	
+
 	this._useTransform = this.settings.transform || this._hasTransform();
 	this._useTransition = this.settings.transition || this._hasTransition();
 
@@ -150,7 +156,12 @@ AppScroller.prototype.init = function() {
 		this.wrapper.addEventListener('onScroll', window[this.settings.onscroll]);
 	}
 
-	this.tmp_el = document.getElementsByClassName('view-body-inner')[0];
+	this.tmp_el = this.wrapper.parentNode.getElementsByClassName('view-body-inner')[0];
+
+	if (! this._disableScrollbars)
+		this._initScrollbars();
+
+	this.refresh();
 }
 
 AppScroller.prototype._touchStart = function(event) {
@@ -470,6 +481,11 @@ AppScroller.prototype.getScrollPosition = function() {
 	return pos;
 }
 
+AppScroller.prototype._initScrollbars = function() {
+	this.scrollbars.x = new AppScrollbar('x', this);
+	this.scrollbars.y = new AppScrollbar('y', this);
+}
+
 AppScroller.prototype.refresh = function() {
 	this._maxScrollX = this.wrapper.parentNode.clientWidth - this.wrapper.clientWidth;
 	if (this._maxScrollX >= 0) {
@@ -487,5 +503,95 @@ AppScroller.prototype.refresh = function() {
 	else 
 		this.hasScroll.y = true;
 
+	if (! this._disableScrollbars) {
+		this.scrollbars.x.setScrollsize(this._maxScrollX);
+		this.scrollbars.y.setScrollsize(this._maxScrollY);
+
+		this.scrollbars.x.refresh();
+		this.scrollbars.y.refresh();
+	}
+
 	this._bounceBack();
 }
+
+
+
+
+//////////////////////////////////////////////////////
+function AppScrollbar(axis, scroller) {
+	this.axis = (axis == 'x' ? 'x' : 'y');
+	this.visible = true;
+	this.scroller = scroller;
+
+	this.scrollsize = 0;
+	this.scrollposition = 0;
+
+	this.wrapper = document.createElement('DIV');
+	this.wrapper.className = 'scrollbar scrollbar-'+this.axis;
+
+	this.indicator = document.createElement('DIV');
+	this.indicator.className = 'scroll-indicator';
+
+	this.wrapper.appendChild(this.indicator);
+
+	this.scroller.wrapper.parentNode.appendChild(this.wrapper);
+}
+
+
+AppScrollbar.prototype.refresh = function() {
+	if (this.axis == 'y') {
+		var space = this.scroller.scrollbars.x.wrapper.clientHeight;
+		this.wrapper.style.height = (this.scroller.wrapper.parentNode.clientHeight - space) + 'px';
+	}
+	if (this.axis == 'x') {
+		var space = this.scroller.scrollbars.y.wrapper.clientWidth;
+		this.wrapper.style.width = (this.scroller.wrapper.parentNode.clientWidth - space) + 'px';
+	}
+	this.updateIndicator();
+}
+
+AppScrollbar.prototype.hide = function() {
+	this.visible = false;
+	this.wrapper.style.display = 'none';
+}
+AppScrollbar.prototype.show = function() {
+	this.visible = true;
+	this.wrapper.style.display = 'block';
+}
+
+AppScrollbar.prototype.setScrollsize = function(scrollsize) {
+	if (scrollsize == 0)
+		this.hide();
+	else
+		this.show();
+
+	this.scrollsize = Math.abs(scrollsize);
+	this.updateIndicator();
+}
+
+AppScrollbar.prototype.updateIndicator = function() {
+
+	if (this.scrollsize != 0) {
+		if (this.axis == 'x') {
+			var indicator_size = (this.wrapper.clientWidth / this.scrollsize) * this.wrapper.clientWidth;
+			this.indicator.style.width = indicator_size + 'px';
+			this.indicator.style.left = ((this.scrollposition / this.scrollsize) * 100) + '%';
+			this.indicator.style.marginLeft = '-'+(indicator_size / 2)+'px'
+		}
+		if (this.axis == 'y') {
+			var indicator_size = (this.wrapper.clientHeight / this.scrollsize) * this.wrapper.clientHeight;
+			this.indicator.style.height = indicator_size + 'px';
+			this.indicator.style.top = ((this.scrollposition / this.scrollsize) * 100) + '%';
+			this.indicator.style.marginTop = '-'+(indicator_size / 2)+'px'			
+		}
+	}
+
+}
+
+AppScrollbar.prototype.setPosition = function(position) {
+	this.scrollposition = position;
+	this.updateIndicator();
+}
+
+
+

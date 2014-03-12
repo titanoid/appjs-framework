@@ -237,3 +237,45 @@ button.btn-blue {
 button.btn-blue:active {
   background-color: #1c7896;
 }
+
+#scrollBody .view-body-inner{
+  width: 800px !important;
+}
+
+.scrollbar {
+  position: absolute;
+  background-color: transparent;
+  box-sizing: border-box;
+}
+
+.scrollbar-x {
+  left: 0px;
+  bottom: 0px;
+  width: 100%;
+  height: 10px;
+  border: 1px solid blue;
+}
+
+.scrollbar-y {
+  right: 0px;
+  top: 0px;
+  width: 10px;
+  height: 100%;
+  border: 1px solid red;
+}
+
+.scrollbar .scroll-indicator {
+  position: absolute;
+  background-color: #000;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+
+.scrollbar-x .scroll-indicator {
+  height: 100%;
+}
+
+.scrollbar-y .scroll-indicator {
+  width: 100%;
+}

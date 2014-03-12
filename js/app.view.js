@@ -192,8 +192,8 @@ AppView.prototype.afterShow = function() {
     }
     this.state = 'visible';
     if (this.scroller != null) {
-        this.scroller.refresh();
-        this.scroller.scrollTo(0, 0);
+        // this.scroller.refresh();
+        // this.scroller.scrollTo(0, 0);
     }
     else {
         // var myScroll = new IScroll(this.body, {mouseWheel: true, scrollbars: 'custom', scrollX: true, scrollY:true, fadeScrollbars:true, bounce:true});
@@ -208,7 +208,7 @@ AppView.prototype.afterHide = function() {
 AppView.prototype.adjust = function() {
     this.wrapper.style.left = '0px';
     this.wrapper.style.top = '0px';
-    this.wrapper.width = window.innerWidth + 'px';
+    this.wrapper.width = '100%';
     
     this.body.style.left = '0px';
     this.body.style.width = '100%';
