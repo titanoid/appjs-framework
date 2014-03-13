@@ -40,6 +40,8 @@ function AppScroller(wrapper, settings) {
 	
 	this._disableScrollbars = this.settings.scrollbars || false;
 	this.scrollbars = {x:false, y:false}
+
+	this._autoHideScrollbars = (typeof this.settings.autoHideScrollbars != 'undefined' ? this.settings.autoHideScrollbars : true);
 	
 
 	this.settings.onscroll = this.settings.onscroll || false;
@@ -165,15 +167,22 @@ AppScroller.prototype.init = function() {
 }
 
 AppScroller.prototype._touchStart = function(event) {
+	this._isTouching = true;
+
 	if (this._isScrolling) {
 		this._animateEnd();
 		// alert('stop scrolling');
 	}
 
+	if (this._autoHideScrollbars && ! this._disableScrollbars) {
+		this.scrollbars.x.fadeIn(100);
+		this.scrollbars.y.fadeIn(100);
+	}
+
 
 	// this.refresh();
 
-	this._isTouching = true;
+	
 
 	this._touchStartPos = this._getTouchPosition(event);
 
@@ -224,6 +233,12 @@ AppScroller.prototype._touchEnd = function(event) {
 		// document.getElementById('scroll_console').innerHTML = momentum.duration;
 		if (momentum.duration > 0)
 			this.scrollTo( momentum.destX, momentum.destY, {speed: momentum.duration, easing: momentum.easing} );	
+		else {
+			if (this._autoHideScrollbars && ! this._disableScrollbars) {
+				this.scrollbars.x.fadeOut(200);
+				this.scrollbars.y.fadeOut(200);
+			}
+		}
 	}
 
 
@@ -371,6 +386,10 @@ AppScroller.prototype._move = function(x, y, animate) {
 			this.wrapper.style.transform = 'translate('+x+'px, '+y+'px) translateZ(0)';
 			this.wrapper.style.WebkitTransform = 'translate('+x+'px, '+y+'px) translateZ(0)';
 			this.wrapper.style.MsTransform = 'translate('+x+'px, '+y+'px) translateZ(0)';
+			if (! this._disableScrollbars) {
+				this.scrollbars.x.setPosition(x);
+				this.scrollbars.y.setPosition(y);
+			}
 		}
 		else {
 			var easing_str = utils.easing[animate.easing].style;
@@ -381,6 +400,12 @@ AppScroller.prototype._move = function(x, y, animate) {
 				objref.wrapper.style.transform = 'translate('+x+'px, '+y+'px) translateZ(0)';
 				objref.wrapper.style.WebkitTransform = 'translate('+x+'px, '+y+'px) translateZ(0)';
 				objref.wrapper.style.MsTransform = 'translate('+x+'px, '+y+'px) translateZ(0)';
+				
+				if (! objref._disableScrollbars) {
+					objref.scrollbars.x.setPosition(x);
+					objref.scrollbars.y.setPosition(y);
+				}
+
 			}, 0);
 			
 			//if not bouncing back
@@ -388,6 +413,8 @@ AppScroller.prototype._move = function(x, y, animate) {
 				this._isScrolling = true;
 				this._startTrackPosition();
 			}
+
+
 		}
 	}
 }
@@ -409,6 +436,12 @@ AppScroller.prototype._animateEnd = function() {
 	if (this._isScrolling) {
 		this._isScrolling = false;	
 		this._bounceBack();
+	}
+	else {
+		if (this._autoHideScrollbars && ! this._disableScrollbars && ! this._isTouching) {
+			this.scrollbars.x.fadeOut(200);
+			this.scrollbars.y.fadeOut(200);
+		}
 	}
 }
 
@@ -525,6 +558,8 @@ function AppScrollbar(axis, scroller) {
 
 	this.scrollsize = 0;
 	this.scrollposition = 0;
+	this.wrapper_size = 0;
+	this.indicator_size = 0;
 
 	this.wrapper = document.createElement('DIV');
 	this.wrapper.className = 'scrollbar scrollbar-'+this.axis;
@@ -532,20 +567,30 @@ function AppScrollbar(axis, scroller) {
 	this.indicator = document.createElement('DIV');
 	this.indicator.className = 'scroll-indicator';
 
+
 	this.wrapper.appendChild(this.indicator);
 
 	this.scroller.wrapper.parentNode.appendChild(this.wrapper);
+
+	this.fadeTimer = null;
+
+
+
+	// if (this.scroller._autoHideScrollbars)
+	// 	this.wrapper.style.opacity = '0';
 }
 
 
 AppScrollbar.prototype.refresh = function() {
 	if (this.axis == 'y') {
 		var space = this.scroller.scrollbars.x.wrapper.clientHeight;
-		this.wrapper.style.height = (this.scroller.wrapper.parentNode.clientHeight - space) + 'px';
+		this.wrapper_size = (this.scroller.wrapper.parentNode.clientHeight - space);
+		this.wrapper.style.height = this.wrapper_size + 'px';
 	}
 	if (this.axis == 'x') {
 		var space = this.scroller.scrollbars.y.wrapper.clientWidth;
-		this.wrapper.style.width = (this.scroller.wrapper.parentNode.clientWidth - space) + 'px';
+		this.wrapper_size = (this.scroller.wrapper.parentNode.clientWidth - space);
+		this.wrapper.style.width =  this.wrapper_size + 'px';
 	}
 	this.updateIndicator();
 }
@@ -554,6 +599,7 @@ AppScrollbar.prototype.hide = function() {
 	this.visible = false;
 	this.wrapper.style.display = 'none';
 }
+
 AppScrollbar.prototype.show = function() {
 	this.visible = true;
 	this.wrapper.style.display = 'block';
@@ -572,26 +618,77 @@ AppScrollbar.prototype.setScrollsize = function(scrollsize) {
 AppScrollbar.prototype.updateIndicator = function() {
 
 	if (this.scrollsize != 0) {
-		if (this.axis == 'x') {
-			var indicator_size = (this.wrapper.clientWidth / this.scrollsize) * this.wrapper.clientWidth;
-			this.indicator.style.width = indicator_size + 'px';
-			this.indicator.style.left = ((this.scrollposition / this.scrollsize) * 100) + '%';
-			this.indicator.style.marginLeft = '-'+(indicator_size / 2)+'px'
-		}
-		if (this.axis == 'y') {
-			var indicator_size = (this.wrapper.clientHeight / this.scrollsize) * this.wrapper.clientHeight;
-			this.indicator.style.height = indicator_size + 'px';
-			this.indicator.style.top = ((this.scrollposition / this.scrollsize) * 100) + '%';
-			this.indicator.style.marginTop = '-'+(indicator_size / 2)+'px'			
-		}
-	}
+		var indicator_size = this._getIndicatorSize();
+		var indicator_position = this._getIndicatorPosition(indicator_size);
+		var objref = this;
+		setTimeout(function(){
+			if (objref.axis == 'x') {
+				objref.indicator.style.width = indicator_size + 'px';
+				objref.indicator.style.left =  indicator_position + 'px';
+			}
+			if (objref.axis == 'y') {
+				objref.indicator.style.height = indicator_size + 'px';
+				objref.indicator.style.top = indicator_position + 'px';
+				// document.getElementById('console').innerHTML = new Date().getTime();
+			}
+		},10)
 
+
+	}
+}
+
+AppScrollbar.prototype._getIndicatorPosition = function(size) {
+	var max_position = this.wrapper_size - size;
+	var indicator_position = (this.scrollposition / this.scrollsize) * max_position;
+
+	return Math.round(indicator_position);
+}
+
+AppScrollbar.prototype._getIndicatorSize = function() {
+	
+	var size = (this.wrapper_size / (this.scrollsize + this.wrapper_size)) * this.wrapper_size;
+	size = Math.max(size, 20);
+
+	return Math.round(size);
 }
 
 AppScrollbar.prototype.setPosition = function(position) {
-	this.scrollposition = position;
+	console.log(this.axis+' position '+position);
+	if (position > 0) position = 0;
+	if (this.axis == 'x' && position < this.scroller._maxScrollX)
+		position = this.scroller._maxScrollX;
+	if (this.axis == 'y' && position < this.scroller._maxScrollY)
+		position = this.scroller._maxScrollY;
+
+	this.scrollposition = Math.abs(Math.round(position));
 	this.updateIndicator();
+	
 }
+
+
+AppScrollbar.prototype.fadeOut = function(duration) {
+	return;
+	this.wrapper.style.transition = 'all 200ms';
+	this.wrapper.style.WebkitTransition = 'all 200ms';
+	var objref = this;
+	clearTimeout(this.fadeTimer);
+	this.fadeTimer = setTimeout(function() {
+		objref.wrapper.style.opacity = '0';
+	}, 1000);
+}
+
+
+AppScrollbar.prototype.fadeIn = function(duration) {
+	return;
+	this.wrapper.style.transition = 'all 200ms';
+	this.wrapper.style.WebkitTransition = 'all 200ms';
+	var objref = this;
+	clearTimeout(this.fadeTimer);
+	this.fadeTimer = setTimeout(function() {
+		objref.wrapper.style.opacity = '1.0';
+	}, 10);
+}
+
 
 
 

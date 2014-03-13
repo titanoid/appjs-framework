@@ -192,7 +192,7 @@ AppView.prototype.afterShow = function() {
     }
     this.state = 'visible';
     if (this.scroller != null) {
-        // this.scroller.refresh();
+        this.scroller.refresh();
         // this.scroller.scrollTo(0, 0);
     }
     else {

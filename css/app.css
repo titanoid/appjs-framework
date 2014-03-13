@@ -239,8 +239,10 @@ button.btn-blue:active {
 }
 
 #scrollBody .view-body-inner{
-  width: 800px !important;
+  /*width: 800px !important;*/
 }
+
+/*#console { display: none;}*/
 
 .scrollbar {
   position: absolute;
@@ -252,21 +254,21 @@ button.btn-blue:active {
   left: 0px;
   bottom: 0px;
   width: 100%;
-  height: 10px;
-  border: 1px solid blue;
+  height: 5px;
+  /*border: 1px solid blue;*/
 }
 
 .scrollbar-y {
   right: 0px;
   top: 0px;
-  width: 10px;
+  width: 5px;
   height: 100%;
-  border: 1px solid red;
+  /*border: 1px solid red;*/
 }
 
 .scrollbar .scroll-indicator {
   position: absolute;
-  background-color: #000;
+  background-color: rgba(0, 0, 0, 0.5);
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
