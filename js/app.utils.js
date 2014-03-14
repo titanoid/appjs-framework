@@ -20,6 +20,31 @@ var Utils = {
 	    event.eventName = event_name;
 	    return event;
 	},
+
+  getTouchPosition: function(event) {
+      var pos = {x:null, y:null};
+
+      if ('ontouchstart' in window) {
+        if (typeof event.touches[0] != 'undefined') {
+          pos.x = event.touches[0].clientX;
+          pos.y = event.touches[0].clientY;
+        }
+        else if (typeof event.changedTouches[0] != 'undefined') {
+          pos.x = event.changedTouches[0].pageX;
+          pos.y = event.changedTouches[0].pageY;  
+        }
+        else {
+          pos.x = null;
+          pos.y = null;
+        }
+      }
+      else {
+        pos.x = event.clientX;
+        pos.y = event.clientY;
+      }
+      return pos;
+  }
+
 }
 
 if (!Object.keys) {

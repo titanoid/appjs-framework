@@ -2,10 +2,12 @@
 
 <link href="http://dev.appjsframework.com/css/app.css" media="screen" rel="stylesheet" type="text/css" />
 <link href="http://dev.appjsframework.com/css/app.icons.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="http://dev.appjsframework.com/css/app.console.css" media="screen" rel="stylesheet" type="text/css" />
 
 <script src="http://dev.appjsframework.com/lib/jquery.min.js"></script>
 <script src="http://dev.appjsframework.com/lib/iscroll.js"></script>
 <script src="http://dev.appjsframework.com/js/app.js"></script>
+<script src="http://dev.appjsframework.com/js/app.console.js"></script>
 <script src="http://dev.appjsframework.com/js/app.dom.js"></script>
 <script src="http://dev.appjsframework.com/js/app.utils.js"></script>
 <script src="http://dev.appjsframework.com/js/app.view.js"></script>
@@ -13,6 +15,7 @@
 <script src="http://dev.appjsframework.com/js/app.scroller.js"></script>
 
 <button id="btnRefresh" style="position:absolute;z-index:100; right:20px; bottom:20px;" onclick="location.reload(true)"><span class="appicon appicon-refresh"></span> RELOAD</button>
+<button id="btnConsole" style="position:absolute;z-index:100; right:135px; bottom:20px;" onclick="AppConsole.show()">CONSOLE</button>
 
 <div class="app-view" id="main-view" data-url="home" data-swipeleftsp="true" data-swiperightsp="true">
 	<ul class="view-header">
