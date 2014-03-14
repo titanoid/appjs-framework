@@ -259,33 +259,45 @@ Element.prototype.enableTap = function() {
         this.onclick = null;
 
         this.touchstarted = false;
+        this.timer = null;
 
-        var btn = this;
+        var el = this;
         this.addEventListener('touchstart', function() {
-            if (btn.touchstarted) {
+            if (el.touchstarted) {
                 return;
             }
             else {
-                btn.touchstarted = true;
-                this.touchmoved = false;
-                console.log(this);
+                el.touchstarted = true;
+                el.touchmoved = false;
+                el.timer = setTimeout(function(){
+                    el.addClass('tap-active');
+                }, 70);
             }
         });
 
-        this.addEventListener('touchmove', function() {
-            if (this.touchstarted) {
-                this.touchmoved = true;
-                console.log(this);
+        this.addEventListener('touchmove', function(event) {
+            if (el.touchstarted) {
+                el.touchmoved = true;
+                clearTimeout(el.timer);
+                el.removeClass('tap-active');
             }
         });
 
         this.addEventListener('touchend', function() {
-            this.touchstarted = false;
-            console.log(this);
+            el.touchstarted = false;
 
-            if (! this.touchmoved) {
-                this.clickfunction.call();
+            if (! el.touchmoved) {
+                el.clickfunction.call();
+                el.removeClass('tap-active');
             }
         });
     }
+}
+
+Element.prototype.getFirstChild = function(){
+  var firstChild = this.firstChild;
+  while(firstChild != null && firstChild.nodeType == 3){ // skip TextNodes
+    firstChild = firstChild.nextSibling;
+  }
+  return firstChild;
 }

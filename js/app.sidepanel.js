@@ -3,6 +3,7 @@ function AppSidePanel(sidepanel, appref) {
     this.appref = appref;
     this.wrapper = sidepanel;
     this.position = sidepanel.dataset.position;
+    this.scroller = null;
     
     this.width = this.wrapper.offsetWidth;
 
@@ -52,6 +53,11 @@ function AppSidePanel(sidepanel, appref) {
 }
 
 AppSidePanel.prototype.beforeShow = function() {
+    if (this.appref.tmpSidepanel != null && this.appref.tmpSidepanel != this) {
+        this.appref.tmpSidepanel.afterHide();
+    }
+    this.appref.tmpSidepanel = this;
+
     this.wrapper.style.visibility = 'visible';
     this.wrapper.style.zIndex = 2;
     this.state = 'showing';
@@ -61,10 +67,7 @@ AppSidePanel.prototype.beforeShow = function() {
 AppSidePanel.prototype.show = function() {
     if (this.state == 'visible' || (this.appref.currentSidepanel != null && this.appref.currentSidepanel != this))
         return;
-
-    // if (this.appref.currentSidepanel != null && this.appref.currentSidepanel != this)
-    //     this.appref.currentSidepanel.hide();
-    
+   
     this.beforeShow();
 
     var objref = this;
@@ -83,6 +86,14 @@ AppSidePanel.prototype.show = function() {
 
 AppSidePanel.prototype.afterShow = function() {
     var objref = this;
+    if (this.scroller == null) {
+        var scroll_settings = {scrollx: false, scrolly:true, bounce: false, scrollbars:false }
+        this.scroller = new AppScroller(this.wrapper, scroll_settings);
+    }
+    else {
+        this.scroller.refresh();
+    }
+
     this.appref.currentView.wrapper.removeEvent('webkitTransitionEnd', function() { objref.afterShow(); } );
     this.appref.currentView.wrapper.style.transition = 'none';
     this.appref.currentView.wrapper.style.WebkitTransition = 'none';
@@ -125,7 +136,7 @@ AppSidePanel.prototype.afterHide = function() {
     this.appref.currentView.wrapper.style.WebkitTransition = 'none';
     this.appref.currentSidepanel = null;
     this.state = 'hidden';
-    this.wrapper.style.visibility = 'hidden';
+    // this.wrapper.style.visibility = 'hidden';
     this.wrapper.style.zIndex = 0;
     this.wrapper.dispatchEvent(this.onAfterHide);
 }

@@ -17,6 +17,7 @@
 <div class="app-view" id="main-view" data-url="home" data-swipeleftsp="true" data-swiperightsp="true">
 	<ul class="view-header">
 		<li class="button" onclick="app.sidepanels.left.toggle()"><span class="appicon appicon-align-justify"></span> Title</li>
+		<li id="console"></li>
 	</ul>
     
     <div class="view-body">
@@ -34,10 +35,9 @@
     </div>
 </div>
 
-<div class="app-view" id="scroller-view" data-url="scroller" data-onscroll="onScrollTest" data-scrollx="true" data-scrolly="true" data-scrollbounce="false" data-scrollbars="true">
+<div class="app-view" id="scroller-view" data-url="scroller" data-onscroll="onScrollTest" data-scrollx="true" data-scrolly="true" data-scrollbounce="true" data-scrollbars="true">
 	<ul class="view-header">
 		<li class="button" onclick="app.navigate('#home')"><span class="appicon appicon-chevron-left"></span> Home</li>
-		<li id="console"></li>
 	</ul>
     <div class="view-body" id="scrollBody">
     	<div class="view-body-inner">
@@ -91,15 +91,30 @@
 		<ul class="sidepanel-menu">
 			<li class="menu-title">Components</li>
 			<li onclick="app.navigate('#home')">Home</li>
+			<li onclick="app.navigate('#home')">Themes</li>
+			<li onclick="app.navigate('#home')">Views</li>
+			<li onclick="app.navigate('#home')">Sidepanels</li>
+			<li onclick="app.navigate('#home')">Buttons</li>
+			<li onclick="app.navigate('#home')">Text Inputs</li>
+			<li onclick="app.navigate('#home')">Checkboxes</li>
+			<li onclick="app.navigate('#home')">Radiobuttons</li>
+			<li onclick="app.navigate('#home')">Switcher</li>
+			<li onclick="app.navigate('#home')">Dropdown</li>
+			<li onclick="app.navigate('#home')">Modal Dialog</li>
+			<li onclick="app.navigate('#home')">List View</li>
+			<li onclick="app.navigate('#home')">Tabs</li>
+			<li onclick="app.navigate('#home')">Icons</li>
+			<li onclick="app.navigate('#home')">Spinner</li>
 			<li onclick="app.navigate('#scroller')">Scroller</li>
-			<li>Sidepanels</li>
-			<li>Buttons</li>
+			<li>Datasource</li>
 		</ul>
 	</div>
 </div>
 
 <div class="app-sidepanel app-sidepanel-right" id="right-sidepanel" data-position="right">
-	right sidepanel
+	<div class="app-sidepanel-inner">
+		right sidepanel
+	</div>
 </div>
 
 

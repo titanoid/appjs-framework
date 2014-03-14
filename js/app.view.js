@@ -90,7 +90,7 @@ AppView.prototype.initScroller = function() {
     scroll_settings.bounce = (this.wrapper.dataset.scrollbounce == 'true' ? true : false);
     scroll_settings.onscroll = (this.wrapper.dataset.onscroll != '' ? this.wrapper.dataset.onscroll : false);
     
-    this.scroller = new AppScroller(this.body.getElementsByClassName('view-body-inner')[0], scroll_settings);
+    this.scroller = new AppScroller(this.body, scroll_settings);
     // this.scroller.init();
 }
 
@@ -203,6 +203,7 @@ AppView.prototype.afterShow = function() {
 AppView.prototype.afterHide = function() {
     this.wrapper.dispatchEvent(this.onAfterHide);
     this.state = 'hidden';
+
 }
 
 AppView.prototype.adjust = function() {
@@ -291,6 +292,7 @@ AppView.prototype.touchmove = function(event) {
         if (this.touch_distance_x < 0 && Math.abs(this.touch_distance_x) <= this.leftsp.width && this.touch_sp.position == 'left')
             this.wrapper.style.webkitTransform = 'translateX('+(this.leftsp.width - Math.abs(this.touch_distance_x))+'px)';   
     }
+
     Utils.cancelEvent(event);
     Utils.stopPropagation(event);
 }

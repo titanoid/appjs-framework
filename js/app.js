@@ -4,6 +4,7 @@ function App() {
 
     this.sidepanels = { left: null, right: null};
     this.currentSidepanel = null;
+    this.tmpSidepanel = null;
 
     this.spinner = null;
 

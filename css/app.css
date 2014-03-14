@@ -52,9 +52,6 @@ body {
    -ms-perspective: 1000;
    perspective: 1000;
 
-   /*border-left: 2px solid #444;
-   border-right: 2px solid #444;*/
-
    box-shadow: 0px 0px 10px #222;
 }
 
@@ -115,7 +112,7 @@ ul.view-header li.button:active {
   position: absolute;
   left: 0px;
   top: 0px;
-  width: 200px;
+  width: 250px;
   height: 100%;
   visibility: hidden;
   background-color: #555;
@@ -150,9 +147,14 @@ ul.view-header li.button:active {
   font-size: 20px;
   cursor: default;
 }
-.app-sidepanel .sidepanel-menu li:active {
+.app-sidepanel .sidepanel-menu li.tap-active {
   background-color: #444;
 }
+
+.app-sidepanel .sidepanel-menu li:active {
+ 
+}
+
 
 
 
@@ -238,29 +240,28 @@ button.btn-blue:active {
   background-color: #1c7896;
 }
 
-#scrollBody .view-body-inner{
-  /*width: 800px !important;*/
-}
-
-/*#console { display: none;}*/
+/*#scrollBody .view-body-inner{
+  width: 800px !important;
+}*/
 
 .scrollbar {
   position: absolute;
   background-color: transparent;
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
 }
 
 .scrollbar-x {
-  left: 0px;
-  bottom: 0px;
+  left: 2px;
+  bottom: 2px;
   width: 100%;
   height: 5px;
   /*border: 1px solid blue;*/
 }
 
 .scrollbar-y {
-  right: 0px;
-  top: 0px;
+  right: 2px;
+  top: 2px;
   width: 5px;
   height: 100%;
   /*border: 1px solid red;*/
@@ -269,9 +270,24 @@ button.btn-blue:active {
 .scrollbar .scroll-indicator {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.5);
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+
+   -webkit-transform: translateZ(0);
+   -moz-transform: translateZ(0);
+   -ms-transform: translateZ(0);
+   -o-transform: translateZ(0);
+   transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+   -moz-backface-visibility: hidden;
+   -ms-backface-visibility: hidden;
+   backface-visibility: hidden;
+
+   -webkit-perspective: 1000;
+   -moz-perspective: 1000;
+   -ms-perspective: 1000;
+   perspective: 1000;  
 }
 
 .scrollbar-x .scroll-indicator {

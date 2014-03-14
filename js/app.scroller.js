@@ -1,35 +1,5 @@
-var utils = {};
-utils.easing = {
-		quadratic: {
-			style: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-			fn: function (k) {
-				return k * ( 2 - k );
-			}
-		},
-		circular: {
-			style: 'cubic-bezier(0.1, 0.57, 0.1, 1)',	// Not properly "circular" but this looks better, it should be (0.075, 0.82, 0.165, 1)
-			fn: function (k) {
-				return Math.sqrt( 1 - ( --k * k ) );
-			}
-		},
-		bounce: {
-			style: '',
-			fn: function (k) {
-				if ( ( k /= 1 ) < ( 1 / 2.75 ) ) {
-					return 7.5625 * k * k;
-				} else if ( k < ( 2 / 2.75 ) ) {
-					return 7.5625 * ( k -= ( 1.5 / 2.75 ) ) * k + 0.75;
-				} else if ( k < ( 2.5 / 2.75 ) ) {
-					return 7.5625 * ( k -= ( 2.25 / 2.75 ) ) * k + 0.9375;
-				} else {
-					return 7.5625 * ( k -= ( 2.625 / 2.75 ) ) * k + 0.984375;
-				}
-			}
-		}
-	}
-
 function AppScroller(wrapper, settings) {
-	this.wrapper = wrapper;
+	this.wrapper = wrapper.getFirstChild();
 
 	this.settings = settings;
 
@@ -38,7 +8,7 @@ function AppScroller(wrapper, settings) {
 	this.hasScroll.x = this.settings.scrollx || false;
 	this.hasScroll.y = this.settings.scrolly || false;
 	
-	this._disableScrollbars = this.settings.scrollbars || false;
+	this._disableScrollbars = this.settings.scrollbars == 'false'  ? true : false;
 	this.scrollbars = {x:false, y:false}
 
 	this._autoHideScrollbars = (typeof this.settings.autoHideScrollbars != 'undefined' ? this.settings.autoHideScrollbars : true);
@@ -79,6 +49,34 @@ function AppScroller(wrapper, settings) {
 
 
 	this.init();
+
+	this.easing = {
+		quadratic: {
+			style: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+			fn: function (k) {
+				return k * ( 2 - k );
+			}
+		},
+		circular: {
+			style: 'cubic-bezier(0.1, 0.57, 0.1, 1)',	// Not properly "circular" but this looks better, it should be (0.075, 0.82, 0.165, 1)
+			fn: function (k) {
+				return Math.sqrt( 1 - ( --k * k ) );
+			}
+		},
+		bounce: {
+			style: '',
+			fn: function (k) {
+				if ( ( k /= 1 ) < ( 1 / 2.75 ) ) {
+					return 7.5625 * k * k;
+				} else if ( k < ( 2 / 2.75 ) ) {
+					return 7.5625 * ( k -= ( 1.5 / 2.75 ) ) * k + 0.75;
+				} else if ( k < ( 2.5 / 2.75 ) ) {
+					return 7.5625 * ( k -= ( 2.25 / 2.75 ) ) * k + 0.9375;
+				} else {
+					return 7.5625 * ( k -= ( 2.625 / 2.75 ) ) * k + 0.984375;
+				}
+			}
+		}}
 }
 
 AppScroller.prototype._hasTransform = function() {
@@ -158,7 +156,7 @@ AppScroller.prototype.init = function() {
 		this.wrapper.addEventListener('onScroll', window[this.settings.onscroll]);
 	}
 
-	this.tmp_el = this.wrapper.parentNode.getElementsByClassName('view-body-inner')[0];
+	this.tmp_el = this.wrapper.parentNode.getFirstChild();
 
 	if (! this._disableScrollbars)
 		this._initScrollbars();
@@ -175,8 +173,8 @@ AppScroller.prototype._touchStart = function(event) {
 	}
 
 	if (this._autoHideScrollbars && ! this._disableScrollbars) {
-		this.scrollbars.x.fadeIn(100);
-		this.scrollbars.y.fadeIn(100);
+		this.scrollbars.x.fadeIn();
+		this.scrollbars.y.fadeIn();
 	}
 
 
@@ -235,9 +233,10 @@ AppScroller.prototype._touchEnd = function(event) {
 			this.scrollTo( momentum.destX, momentum.destY, {speed: momentum.duration, easing: momentum.easing} );	
 		else {
 			if (this._autoHideScrollbars && ! this._disableScrollbars) {
-				this.scrollbars.x.fadeOut(200);
-				this.scrollbars.y.fadeOut(200);
+				this.scrollbars.x.fadeOut();
+				this.scrollbars.y.fadeOut();
 			}
+			this._isScrolling = false;
 		}
 	}
 
@@ -392,7 +391,7 @@ AppScroller.prototype._move = function(x, y, animate) {
 			}
 		}
 		else {
-			var easing_str = utils.easing[animate.easing].style;
+			var easing_str = this.easing[animate.easing].style;
 			this.wrapper.style.webkitTransition = "all "+animate.speed+"ms "+easing_str;
 			this.wrapper.style.transition = "all "+animate.speed+"ms "+easing_str;
 			var objref = this;
@@ -402,8 +401,8 @@ AppScroller.prototype._move = function(x, y, animate) {
 				objref.wrapper.style.MsTransform = 'translate('+x+'px, '+y+'px) translateZ(0)';
 				
 				if (! objref._disableScrollbars) {
-					objref.scrollbars.x.setPosition(x);
-					objref.scrollbars.y.setPosition(y);
+					objref.scrollbars.x.setPosition(x, animate);
+					objref.scrollbars.y.setPosition(y, animate);
 				}
 
 			}, 0);
@@ -437,16 +436,15 @@ AppScroller.prototype._animateEnd = function() {
 		this._isScrolling = false;	
 		this._bounceBack();
 	}
-	else {
-		if (this._autoHideScrollbars && ! this._disableScrollbars && ! this._isTouching) {
-			this.scrollbars.x.fadeOut(200);
-			this.scrollbars.y.fadeOut(200);
-		}
+	
+	if (this._autoHideScrollbars && ! this._disableScrollbars && ! this._isTouching) {
+			this.scrollbars.x.fadeOut();
+			this.scrollbars.y.fadeOut();
 	}
 }
 
 AppScroller.prototype._bounceBack = function() {
-	if (this._enableBounce && ! this._isScrolling) {
+	if (! this._isScrolling) {
 		var bounceBack = false;
 		var x = this.scrollPosition.x;
 		var y = this.scrollPosition.y;
@@ -535,20 +533,22 @@ AppScroller.prototype.refresh = function() {
 	}
 	else 
 		this.hasScroll.y = true;
+	
+	var objref = this;
+	setTimeout(function() {
+	objref._bounceBack();
 
-	if (! this._disableScrollbars) {
-		this.scrollbars.x.setScrollsize(this._maxScrollX);
-		this.scrollbars.y.setScrollsize(this._maxScrollY);
 
-		this.scrollbars.x.refresh();
-		this.scrollbars.y.refresh();
+	if (! objref._disableScrollbars) {
+		objref.scrollbars.x.setScrollsize(objref._maxScrollX);
+		objref.scrollbars.y.setScrollsize(objref._maxScrollY);
+
+		objref.scrollbars.x.refresh();
+		objref.scrollbars.y.refresh();
 	}
 
-	this._bounceBack();
+	}, 10);
 }
-
-
-
 
 //////////////////////////////////////////////////////
 function AppScrollbar(axis, scroller) {
@@ -576,19 +576,18 @@ function AppScrollbar(axis, scroller) {
 
 
 
-	// if (this.scroller._autoHideScrollbars)
-	// 	this.wrapper.style.opacity = '0';
+	if (this.scroller._autoHideScrollbars)
+		this.wrapper.style.opacity = '0';
 }
-
 
 AppScrollbar.prototype.refresh = function() {
 	if (this.axis == 'y') {
-		var space = this.scroller.scrollbars.x.wrapper.clientHeight;
+		var space = this.scroller.scrollbars.x.wrapper.clientHeight + 4;
 		this.wrapper_size = (this.scroller.wrapper.parentNode.clientHeight - space);
 		this.wrapper.style.height = this.wrapper_size + 'px';
 	}
 	if (this.axis == 'x') {
-		var space = this.scroller.scrollbars.y.wrapper.clientWidth;
+		var space = this.scroller.scrollbars.y.wrapper.clientWidth + 4;
 		this.wrapper_size = (this.scroller.wrapper.parentNode.clientWidth - space);
 		this.wrapper.style.width =  this.wrapper_size + 'px';
 	}
@@ -615,23 +614,41 @@ AppScrollbar.prototype.setScrollsize = function(scrollsize) {
 	this.updateIndicator();
 }
 
-AppScrollbar.prototype.updateIndicator = function() {
+AppScrollbar.prototype.updateIndicator = function(animate_data) {
+
+	var animate = animate_data || {speed:0};
 
 	if (this.scrollsize != 0) {
 		var indicator_size = this._getIndicatorSize();
 		var indicator_position = this._getIndicatorPosition(indicator_size);
-		var objref = this;
-		setTimeout(function(){
-			if (objref.axis == 'x') {
-				objref.indicator.style.width = indicator_size + 'px';
-				objref.indicator.style.left =  indicator_position + 'px';
+
+		if (this.scroller._useTransform) {
+
+			if (animate.speed > 0) {
+				var easing_str = this.scroller.easing[animate.easing].style;
+
+				this.indicator.style.webkitTransition = "all "+animate.speed+"ms "+easing_str;
+				this.indicator.style.transition = "all "+animate.speed+"ms "+easing_str;
 			}
-			if (objref.axis == 'y') {
-				objref.indicator.style.height = indicator_size + 'px';
-				objref.indicator.style.top = indicator_position + 'px';
-				// document.getElementById('console').innerHTML = new Date().getTime();
+			else {
+				this.indicator.style.webkitTransition = "1ms";
+				this.indicator.style.transition = "1ms";	
 			}
-		},10)
+
+			if (this.axis == 'x') {
+				this.indicator.style.width = indicator_size + 'px';
+				this.indicator.style.WebkitTransform = 'translateX('+indicator_position+'px)';
+				this.indicator.style.transform = 'translateX('+indicator_position+'px)';
+			}
+			if (this.axis == 'y') {
+				this.indicator.style.height = indicator_size + 'px';
+				this.indicator.style.WebkitTransform = 'translateY('+indicator_position+'px)';
+				this.indicator.style.transform = 'translateY('+indicator_position+'px)';
+			}
+		}
+		else {
+
+		}
 
 
 	}
@@ -652,8 +669,8 @@ AppScrollbar.prototype._getIndicatorSize = function() {
 	return Math.round(size);
 }
 
-AppScrollbar.prototype.setPosition = function(position) {
-	console.log(this.axis+' position '+position);
+AppScrollbar.prototype.setPosition = function(position, animate_data) {
+	var animate = animate_data || {speed:0}
 	if (position > 0) position = 0;
 	if (this.axis == 'x' && position < this.scroller._maxScrollX)
 		position = this.scroller._maxScrollX;
@@ -661,25 +678,20 @@ AppScrollbar.prototype.setPosition = function(position) {
 		position = this.scroller._maxScrollY;
 
 	this.scrollposition = Math.abs(Math.round(position));
-	this.updateIndicator();
-	
+	this.updateIndicator(animate);
 }
 
-
 AppScrollbar.prototype.fadeOut = function(duration) {
-	return;
 	this.wrapper.style.transition = 'all 200ms';
 	this.wrapper.style.WebkitTransition = 'all 200ms';
 	var objref = this;
 	clearTimeout(this.fadeTimer);
 	this.fadeTimer = setTimeout(function() {
 		objref.wrapper.style.opacity = '0';
-	}, 1000);
+	}, 500);
 }
 
-
 AppScrollbar.prototype.fadeIn = function(duration) {
-	return;
 	this.wrapper.style.transition = 'all 200ms';
 	this.wrapper.style.WebkitTransition = 'all 200ms';
 	var objref = this;
@@ -688,7 +700,3 @@ AppScrollbar.prototype.fadeIn = function(duration) {
 		objref.wrapper.style.opacity = '1.0';
 	}, 10);
 }
-
-
-
-
