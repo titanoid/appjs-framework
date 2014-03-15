@@ -13,7 +13,6 @@ function AppScroller(wrapper, settings) {
 
 	this._autoHideScrollbars = (typeof this.settings.autoHideScrollbars != 'undefined' ? this.settings.autoHideScrollbars : true);
 	
-
 	this.settings.onscroll = this.settings.onscroll || false;
 
 	//set starting scroll position

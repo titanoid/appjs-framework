@@ -233,7 +233,7 @@ AppView.prototype.touchstart = function(event) {
     this.touch_start_x = event.touches[0].clientX;
     this.touch_start_y = event.touches[0].clientY;
 
-    Utils.cancelEvent(event);
+    // Utils.cancelEvent(event);
     Utils.stopPropagation(event);
 
     //this.appref.currentView.wrapper.style.webkitTransform = 'translateZ(0)';

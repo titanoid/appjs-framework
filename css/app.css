@@ -89,6 +89,10 @@ ul.view-header li.button:active {
     background-color: #B3B3B3;
 }
 
+ul.view-header li.active {
+    background-color: #B3B3B3;
+}
+
 .view-body {
     position: absolute;
     left: 0px;
@@ -153,6 +157,10 @@ ul.view-header li.button:active {
 
 .app-sidepanel .sidepanel-menu li:active {
  
+}
+
+.app-sidepanel .scrollbar .scroll-indicator {
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 

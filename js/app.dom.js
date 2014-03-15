@@ -145,69 +145,6 @@ Element.prototype.animate = function(properties, time, callbacks) {
     }, this.delay);
 }
 
-Element.prototype.animateBK = function(properties, time, callbacks) {
-    this.getDelta = function(progress, func) {
-        switch(func) {
-            case 'linear' :
-                return progress;
-            case 'ease-in' :
-                return Math.pow(progress, 2);
-            default:
-                return progress;
-        }
-    }
-
-    this.animate_properties = properties || {};
-    this.callbacks = callbacks || {};
-
-    var props = Object.keys(this.animate_properties);
-    for(var i = 0; i < props.length; i++) {
-        var key = props[i];
-        this.animate_properties[key].start = this.animate_properties[key].start || 0;
-        this.animate_properties[key].end = this.animate_properties[key].end || 0;
-        this.animate_properties[key].pattern = this.animate_properties[key].pattern || null;
-        this.animate_properties[key].easing = this.animate_properties[key].easing || 'linear';
-        this.animate_properties[key].unit = this.animate_properties[key].unit || 'px';
-    }
-
-    this.animate_time = time;
-    this.delay = 10;
-    this.progress = 0;
-
-    this.stepCount = Math.round(this.animate_time / this.delay);
-    this.currentStep = 0;
-
-    var objref = this;
-
-    this.timer = setInterval(function(){
-
-        objref.currentStep++;
-        objref.progress = objref.currentStep / objref.stepCount;
-        for(var key in objref.animate_properties) {
-            var delta = objref.getDelta(objref.progress, objref.animate_properties[key].easing)
-            var cval = objref.animate_properties[key].start + ( (objref.animate_properties[key].end - objref.animate_properties[key].start) * delta );
-            if (objref.animate_properties[key].pattern == null)
-                 objref.style[key] = cval + objref.animate_properties[key].unit;
-             else
-                 objref.style[key] = objref.animate_properties[key].pattern.replace('%val%', cval);
-        }
-
-
-        
-        if (typeof objref.callbacks.onProgress == 'function')
-                objref.callbacks.onProgress.call(objref,objref.progress);
-
-        if (objref.currentStep >= objref.stepCount) {
-            clearInterval(objref.timer);
-            if (typeof objref.callbacks.onFinish == 'function')
-                objref.callbacks.onFinish.call();
-        }
-
-        // alert(objref.progress)
-
-    }, this.delay);
-}
-
 Element.prototype.addEvent = function(type, listener, useCapture) {
     var i, evt;
 
@@ -269,7 +206,7 @@ Element.prototype.enableTap = function() {
             else {
                 el.touchstarted = true;
                 el.touchmoved = false;
-                el.timer = setTimeout(function(){
+                el.timer = setTimeout(function(event){
                     el.addClass('tap-active');
                 }, 70);
             }

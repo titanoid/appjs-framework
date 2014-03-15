@@ -30,7 +30,8 @@ function loadApp() {
     loader.style.marginTop = '-64px';
     document.body.appendChild(loader);
     
-    var url = 'http://dev.appjsframework.com/activity_main.html';
+    var c = new Date().getTime();
+    var url = 'http://dev.appjsframework.com/activity_main.html?c='+c;
     var xmlhttp = new XMLHttpRequest();
 
     // Callback function when XMLHttpRequest is ready

@@ -19,7 +19,7 @@ App.prototype.init = function() {
         objref.currentView.adjust();
     });
 
-    document.body.addEventListener('touchstart', function(event){ event.preventDefault(); })
+    // document.body.addEventListener('touchstart', function(event){ event.preventDefault(); })
     document.body.addEventListener('touchmove', function(event){ event.preventDefault(); })
 
     // init sidepanels 

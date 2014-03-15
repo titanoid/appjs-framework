@@ -81,7 +81,7 @@ AppSidePanel.prototype.show = function() {
             objref.appref.currentView.wrapper.style.webkitTransform = 'translateX('+objref.width+'px)';
         if (objref.position == 'right')
             objref.appref.currentView.wrapper.style.webkitTransform = 'translateX(-'+objref.width+'px)';
-    },1);
+    },10);
 }
 
 AppSidePanel.prototype.afterShow = function() {
