@@ -1,0 +1,20 @@
+<div class="app-view" id="spinner-view" data-url="spinner" data-swipeleftsp="true" data-persistent="false">
+	<ul class="view-header">
+		<li class="button" onclick="app.navigate('#home')"><span class="appicon appicon-chevron-left"></span> Spinner</li>
+	</ul>
+    <div class="view-body">
+    	<div class="view-body-inner">
+	    	<p>You can programatically show or hide spinner.</p>
+			<button onclick="show5sec(false)">Show for 5 seconds</button>
+			<button onclick="show5sec(true)">Show with drop shadow</button>
+    	</div>
+    </div>
+    <script>
+    	function show5sec(shadow) {
+    		AppSpinner.show(shadow);
+    		setTimeout(function() {
+    			AppSpinner.hide();
+    		}, 5000);
+    	}
+    </script>
+</div>

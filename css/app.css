@@ -24,9 +24,24 @@ body {
 
 }
 
+
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
+}
+
+.clearfix {
+  clear: both;
+}
+
 .app-view {
     z-index: 1;
     position: absolute;
+    visibility: hidden;
+    opacity: 0;
     top: 0px;
     left: 0px;
     width: 100%;
@@ -166,7 +181,7 @@ ul.view-header li.active {
 
 
 
-.app-spinner {
+/*.app-spinner {
   position: absolute;
   z-index: 999;
   top: 0px;
@@ -210,7 +225,7 @@ ul.view-header li.active {
   50%  { transform: rotate(180deg); -webkit-transform: rotate(180deg); -ms-transform: rotate(180deg); opacity: 1.0; }
   to   { transform: rotate(360deg); -webkit-transform: rotate(360deg); -ms-transform: rotate(360deg); opacity: 0.2; }
 }
-
+*/
 
 button {
     outline: none;

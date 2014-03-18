@@ -191,7 +191,7 @@ Element.prototype.removeClass = function(classname) {
 }
 
 Element.prototype.enableTap = function() {
-    if (typeof this.onclick == 'function') {
+    if (typeof this.onclick == 'function' && 'ontouchstart' in window) {
         this.clickfunction = this.onclick;
         this.onclick = null;
 
@@ -222,7 +222,7 @@ Element.prototype.enableTap = function() {
 
         this.addEventListener('touchend', function() {
             el.touchstarted = false;
-
+            clearTimeout(el.timer);
             if (! el.touchmoved) {
                 el.clickfunction.call();
                 el.removeClass('tap-active');

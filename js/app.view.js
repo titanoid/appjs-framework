@@ -1,6 +1,7 @@
 function AppView(view, appref) {
     this.id = view.id;
     this.url = view.dataset.url;
+    this.remote = false;
 
     this.appref = appref;
 
@@ -26,6 +27,11 @@ function AppView(view, appref) {
     // this.wrapper.style.display = 'none';
     this.wrapper.style.visibility = 'hidden';
     this.state = 'hidden';
+
+    if (typeof view.dataset.persistent == 'undefined' || view.dataset.persistent != 'false')
+        this.persistent = true;
+    else
+        this.persistent = false;
 
 
     this.onAfterShow = Utils.createEvent('onViewAfterShow');
@@ -111,7 +117,6 @@ AppView.prototype.bodyContent = function(content) {
 }
 
 AppView.prototype.beforeShow = function() {
-    
     this.state = 'showing';
 
     this.wrapper.dispatchEvent(this.onBeforeShow);
@@ -156,7 +161,7 @@ AppView.prototype.show = function(currentView) {
         this.currentView.beforeHide();
     }
 
-    this.beforeShow();    
+    this.beforeShow();
 
     var objref = this;
     objref.wrapper.style.transition = 'all 200ms';
@@ -173,6 +178,7 @@ AppView.prototype.hide = function() {
     // this.wrapper.style.display = 'none';
     this.wrapper.style.visibility = 'hidden';
     this.state = 'hidden';
+    this.wrapper.style.opacity = 0;
     var objref = this;
     this.wrapper.removeEvent('webkitTransitionEnd', objref.afterShow);
 
@@ -186,7 +192,7 @@ AppView.prototype.afterShow = function() {
     this.wrapper.style.transition = 'none';
     this.wrapper.style.WebkitTransition = 'none';
 
-    if (this.currentView != null) {
+    if (this.currentView != null && this.currentView != this) {
         this.currentView.hide();
         this.currentView = null;
     }
@@ -204,6 +210,12 @@ AppView.prototype.afterHide = function() {
     this.wrapper.dispatchEvent(this.onAfterHide);
     this.state = 'hidden';
 
+    if (this.remote && ! this.persistent) {
+        this.wrapper.parentNode.removeChild(this.wrapper);
+        var index = this.appref.views.indexOf(this);
+        this.appref.views.splice(index, 1);
+        delete this;
+    }
 }
 
 AppView.prototype.adjust = function() {

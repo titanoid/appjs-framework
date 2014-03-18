@@ -1,8 +1,11 @@
 <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 
 <link href="http://dev.appjsframework.com/css/app.css" media="screen" rel="stylesheet" type="text/css" />
-<link href="http://dev.appjsframework.com/css/app.icons.css" media="screen" rel="stylesheet" type="text/css" />
 <link href="http://dev.appjsframework.com/css/app.console.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="http://dev.appjsframework.com/css/app.icons.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="http://dev.appjsframework.com/css/app.spinner.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="http://dev.appjsframework.com/css/app.dialog.css" media="screen" rel="stylesheet" type="text/css" />
+
 
 <script src="http://dev.appjsframework.com/lib/jquery.min.js"></script>
 <script src="http://dev.appjsframework.com/lib/iscroll.js"></script>
@@ -13,92 +16,37 @@
 <script src="http://dev.appjsframework.com/js/app.view.js"></script>
 <script src="http://dev.appjsframework.com/js/app.sidepanel.js"></script>
 <script src="http://dev.appjsframework.com/js/app.scroller.js"></script>
+<script src="http://dev.appjsframework.com/js/app.spinner.js"></script>
+<script src="http://dev.appjsframework.com/js/app.dialog.js"></script>
 
 <button id="btnRefresh" style="position:absolute;z-index:100; right:20px; bottom:20px;" onclick="location.reload(true)"><span class="appicon appicon-refresh"></span> RELOAD</button>
 <button id="btnConsole" style="position:absolute;z-index:100; right:135px; bottom:20px;" onclick="appconsole.show()">CONSOLE</button>
 
-<div class="app-view" id="main-view" data-url="home" data-swipeleftsp="true" data-swiperightsp="true">
+<div class="app-view" id="main-view" data-url="home" data-swipeleftsp="true">
 	<ul class="view-header">
-		<li class="button" id="testBtn" onclick="app.sidepanels.left.toggle()"><span class="appicon appicon-align-justify"></span> Title</li>
-		<li id="console"></li>
+		<li class="button" id="testBtn" onclick="app.sidepanels.left.toggle()"><span class="appicon appicon-align-justify"></span> Menu</li>
 	</ul>
-    
     <div class="view-body">
-    	<h1 id="btnTest1">Buttons</h1>
-    	<button onclick="app.navigate('#about')">Default Button</button>
-    	<button class="btn-blue" onclick="app.navigate('#about')">Blue Button</button>
-    	<h1>Side Panels</h1>
-    	<button class="btn-blue" onclick="app.sidepanels.left.toggle()">Toggle Left</button>
-    	<button class="btn-blue" onclick="app.sidepanels.right.toggle()">Toggle Right</button>
-    	<h1>Spinner</h1>
-    	<button class="btn-blue" id="btnAnimate" onclick="testConsole()">Console Test</button>
-    	<h1>Ajax Call</h1>
-    	<button class="btn-blue" id="btnAnimate" onclick="app.navigate('#test')">Load Remote View</button>
-    </div>
-</div>
-
-<div class="app-view" id="scroller-view" data-url="scroller" data-onscroll="onScrollTest" data-scrollx="true" data-scrolly="true" data-scrollbounce="true" data-scrollbars="true">
-	<ul class="view-header">
-		<li class="button" onclick="app.navigate('#home')"><span class="appicon appicon-chevron-left"></span> Home</li>
-	</ul>
-    <div class="view-body" id="scrollBody">
     	<div class="view-body-inner">
-	    	1. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam risus mauris, commodo at rutrum a, eleifend condimentum erat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque ultrices aliquam lectus a sagittis. Suspendisse aliquam velit sit amet suscipit gravida. Praesent hendrerit odio orci, eu ultricies nulla consequat et. Quisque sapien sapien, pulvinar ac tempor eu, auctor eu nunc. Cras id rutrum purus, a consectetur metus. Curabitur et gravida mi. Morbi blandit, ante egestas dictum adipiscing, velit felis tempus magna, eget accumsan nibh massa a metus.
-	    	<br/>
-			2. Vestibulum id mollis odio, ut elementum nisl. Donec orci magna, pharetra at auctor eu, rhoncus vel risus. Cras hendrerit leo vitae felis tempus lobortis. Proin posuere nisi sed massa facilisis, et elementum neque condimentum. Suspendisse at erat pellentesque, suscipit augue non, imperdiet sem. Aenean eu elit vel nulla ultricies auctor at in velit. Vestibulum fringilla dui vitae tellus molestie mattis in non purus. Phasellus cursus vestibulum turpis ac consectetur.
-			<br/>
-			3. Pellentesque eu mi vestibulum, mollis elit vel, consequat erat. Morbi sed erat dui. Mauris libero velit, pretium non semper faucibus, euismod at risus. Nunc tincidunt nulla et lorem placerat, et vulputate velit euismod. Donec dictum quam ac massa tempus volutpat. Nulla tincidunt sagittis varius. Mauris ac ligula mauris. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus rutrum condimentum metus, nec tincidunt quam luctus sodales. Vestibulum sodales felis eget velit molestie pretium. Proin ac iaculis mi, a tincidunt lorem. Vestibulum pharetra auctor erat, eu facilisis ipsum tincidunt sed. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nec fringilla erat. Praesent aliquet eros sed rutrum ornare.
-			<br/>
-			4. Curabitur placerat lectus sed eros condimentum hendrerit. Etiam ac felis congue, bibendum enim sed, hendrerit magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent laoreet dolor justo. Maecenas vel mi et tellus commodo fringilla. Donec tincidunt dolor a mauris fringilla, vel sollicitudin eros sagittis. Donec dapibus pellentesque ante, nec pellentesque mi sodales sed. Mauris tristique, urna eget hendrerit eleifend, elit ligula tempus leo, sed dapibus risus orci id libero.
-			<br/>
-			5. Fusce vitae mollis metus. Pellentesque sed tincidunt tortor, in varius diam. Suspendisse porta est a lacus dignissim gravida. Maecenas porta nec nisi pellentesque luctus. Donec non dolor lectus. Donec eget lacinia sem, convallis sagittis metus. Nulla ac mauris ac nibh cursus vulputate in et nibh. Praesent in nulla ipsum. Cras arcu ligula, porta id ipsum quis, tincidunt consequat ipsum. Vestibulum diam leo, tristique vel mollis ut, viverra in nulla. Praesent luctus dui et vehicula congue. Morbi eu eros id metus egestas lacinia pellentesque vel justo.
-			<a href="#asdasdasd">TEST URL1</a>
-			6. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam risus mauris, commodo at rutrum a, eleifend condimentum erat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque ultrices aliquam lectus a sagittis. Suspendisse aliquam velit sit amet suscipit gravida. Praesent hendrerit odio orci, eu ultricies nulla consequat et. Quisque sapien sapien, pulvinar ac tempor eu, auctor eu nunc. Cras id rutrum purus, a consectetur metus. Curabitur et gravida mi. Morbi blandit, ante egestas dictum adipiscing, velit felis tempus magna, eget accumsan nibh massa a metus.
-	    	<br/>
-			7. Vestibulum id mollis odio, ut elementum nisl. Donec orci magna, pharetra at auctor eu, rhoncus vel risus. Cras hendrerit leo vitae felis tempus lobortis. Proin posuere nisi sed massa facilisis, et elementum neque condimentum. Suspendisse at erat pellentesque, suscipit augue non, imperdiet sem. Aenean eu elit vel nulla ultricies auctor at in velit. Vestibulum fringilla dui vitae tellus molestie mattis in non purus. Phasellus cursus vestibulum turpis ac consectetur.
-			<br/>
-			8. Pellentesque eu mi vestibulum, mollis elit vel, consequat erat. Morbi sed erat dui. Mauris libero velit, pretium non semper faucibus, euismod at risus. Nunc tincidunt nulla et lorem placerat, et vulputate velit euismod. Donec dictum quam ac massa tempus volutpat. Nulla tincidunt sagittis varius. Mauris ac ligula mauris. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus rutrum condimentum metus, nec tincidunt quam luctus sodales. Vestibulum sodales felis eget velit molestie pretium. Proin ac iaculis mi, a tincidunt lorem. Vestibulum pharetra auctor erat, eu facilisis ipsum tincidunt sed. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nec fringilla erat. Praesent aliquet eros sed rutrum ornare.
-			<br/>
-			9. Curabitur placerat lectus sed eros condimentum hendrerit. Etiam ac felis congue, bibendum enim sed, hendrerit magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent laoreet dolor justo. Maecenas vel mi et tellus commodo fringilla. Donec tincidunt dolor a mauris fringilla, vel sollicitudin eros sagittis. Donec dapibus pellentesque ante, nec pellentesque mi sodales sed. Mauris tristique, urna eget hendrerit eleifend, elit ligula tempus leo, sed dapibus risus orci id libero.
-			<br/>
-			10. Fusce vitae mollis metus. Pellentesque sed tincidunt tortor, in varius diam. Suspendisse porta est a lacus dignissim gravida. Maecenas porta nec nisi pellentesque luctus. Donec non dolor lectus. Donec eget lacinia sem, convallis sagittis metus. Nulla ac mauris ac nibh cursus vulputate in et nibh. Praesent in nulla ipsum. Cras arcu ligula, porta id ipsum quis, tincidunt consequat ipsum. Vestibulum diam leo, tristique vel mollis ut, viverra in nulla. Praesent luctus dui et vehicula congue. Morbi eu eros id metus egestas lacinia pellentesque vel justo.
-			<a href="#asdasdasd">TEST URL2</a>    	
-	    	11. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam risus mauris, commodo at rutrum a, eleifend condimentum erat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque ultrices aliquam lectus a sagittis. Suspendisse aliquam velit sit amet suscipit gravida. Praesent hendrerit odio orci, eu ultricies nulla consequat et. Quisque sapien sapien, pulvinar ac tempor eu, auctor eu nunc. Cras id rutrum purus, a consectetur metus. Curabitur et gravida mi. Morbi blandit, ante egestas dictum adipiscing, velit felis tempus magna, eget accumsan nibh massa a metus.
-	    	<br/>
-			12. Vestibulum id mollis odio, ut elementum nisl. Donec orci magna, pharetra at auctor eu, rhoncus vel risus. Cras hendrerit leo vitae felis tempus lobortis. Proin posuere nisi sed massa facilisis, et elementum neque condimentum. Suspendisse at erat pellentesque, suscipit augue non, imperdiet sem. Aenean eu elit vel nulla ultricies auctor at in velit. Vestibulum fringilla dui vitae tellus molestie mattis in non purus. Phasellus cursus vestibulum turpis ac consectetur.
-			<br/>
-			13. Pellentesque eu mi vestibulum, mollis elit vel, consequat erat. Morbi sed erat dui. Mauris libero velit, pretium non semper faucibus, euismod at risus. Nunc tincidunt nulla et lorem placerat, et vulputate velit euismod. Donec dictum quam ac massa tempus volutpat. Nulla tincidunt sagittis varius. Mauris ac ligula mauris. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus rutrum condimentum metus, nec tincidunt quam luctus sodales. Vestibulum sodales felis eget velit molestie pretium. Proin ac iaculis mi, a tincidunt lorem. Vestibulum pharetra auctor erat, eu facilisis ipsum tincidunt sed. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nec fringilla erat. Praesent aliquet eros sed rutrum ornare.
-			<br/>
-			14. Curabitur placerat lectus sed eros condimentum hendrerit. Etiam ac felis congue, bibendum enim sed, hendrerit magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent laoreet dolor justo. Maecenas vel mi et tellus commodo fringilla. Donec tincidunt dolor a mauris fringilla, vel sollicitudin eros sagittis. Donec dapibus pellentesque ante, nec pellentesque mi sodales sed. Mauris tristique, urna eget hendrerit eleifend, elit ligula tempus leo, sed dapibus risus orci id libero.
-			<br/>
-			15. Fusce vitae mollis metus. Pellentesque sed tincidunt tortor, in varius diam. Suspendisse porta est a lacus dignissim gravida. Maecenas porta nec nisi pellentesque luctus. Donec non dolor lectus. Donec eget lacinia sem, convallis sagittis metus. Nulla ac mauris ac nibh cursus vulputate in et nibh. Praesent in nulla ipsum. Cras arcu ligula, porta id ipsum quis, tincidunt consequat ipsum. Vestibulum diam leo, tristique vel mollis ut, viverra in nulla. Praesent luctus dui et vehicula congue. Morbi eu eros id metus egestas lacinia pellentesque vel justo.
-			<a href="#asdasdasd">TEST URL3</a>
-			16. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam risus mauris, commodo at rutrum a, eleifend condimentum erat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque ultrices aliquam lectus a sagittis. Suspendisse aliquam velit sit amet suscipit gravida. Praesent hendrerit odio orci, eu ultricies nulla consequat et. Quisque sapien sapien, pulvinar ac tempor eu, auctor eu nunc. Cras id rutrum purus, a consectetur metus. Curabitur et gravida mi. Morbi blandit, ante egestas dictum adipiscing, velit felis tempus magna, eget accumsan nibh massa a metus.
-	    	<br/>aaaaaaaa
-			17. Vestibulum id mollis odio, ut elementum nisl. Donec orci magna, pharetra at auctor eu, rhoncus vel risus. Cras hendrerit leo vitae felis tempus lobortis. Proin posuere nisi sed massa facilisis, et elementum neque condimentum. Suspendisse at erat pellentesque, suscipit augue non, imperdiet sem. Aenean eu elit vel nulla ultricies auctor at in velit. Vestibulum fringilla dui vitae tellus molestie mattis in non purus. Phasellus cursus vestibulum turpis ac consectetur.
-			<br/>bbbbbbbbbbb
-			18. Pellentesque eu mi vestibulum, mollis elit vel, consequat erat. Morbi sed erat dui. Mauris libero velit, pretium non semper faucibus, euismod at risus. Nunc tincidunt nulla et lorem placerat, et vulputate velit euismod. Donec dictum quam ac massa tempus volutpat. Nulla tincidunt sagittis varius. Mauris ac ligula mauris. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus rutrum condimentum metus, nec tincidunt quam luctus sodales. Vestibulum sodales felis eget velit molestie pretium. Proin ac iaculis mi, a tincidunt lorem. Vestibulum pharetra auctor erat, eu facilisis ipsum tincidunt sed. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nec fringilla erat. Praesent aliquet eros sed rutrum ornare.
-			<br/>ccccccc
-			19. Curabitur placerat lectus sed eros condimentum hendrerit. Etiam ac felis congue, bibendum enim sed, hendrerit magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent laoreet dolor justo. Maecenas vel mi et tellus commodo fringilla. Donec tincidunt dolor a mauris fringilla, vel sollicitudin eros sagittis. Donec dapibus pellentesque ante, nec pellentesque mi sodales sed. Mauris tristique, urna eget hendrerit eleifend, elit ligula tempus leo, sed dapibus risus orci id libero.
-			<br/>dddddddddd
-			20. Fusce vitae mollis metus. Pellentesque sed tincidunt tortor, in varius diam. Suspendisse porta est a lacus dignissim gravida. Maecenas porta nec nisi pellentesque luctus. Donec non dolor lectus. Donec eget lacinia sem, convallis sagittis metus. Nulla ac mauris ac nibh cursus vulputate in et nibh. Praesent in nulla ipsum. Cras arcu ligula, porta id ipsum quis, tincidunt consequat ipsum. Vestibulum diam leo, tristique vel mollis ut, viverra in nulla. Praesent luctus dui et vehicula congue. Morbi eu eros id metus egestas lacinia pellentesque vel justo.
-			<a href="#asdasdasd">TEST URL4</a>
-		</div>	
+	    	<h1>App JS Framework</h1>
+	    	<p>AppJsFramework is a high performance, small footprint, dependency free, multi-platform HTML5/JavaScript framework for building awesome native looking mobile apps.</p>
+			<p>By using AppJS Framework, you will achieve native-like UI for your hybrid mobile apps built with PhoneGap, all while using the same core skillset you have as a web developer – pure JavaScript and HTML5</p>
+    	</div>
     </div>
 </div>
-
 
 <div class="app-sidepanel app-sidepanel-left" id="main-sidepanel" data-position="left">
 	<div class="app-sidepanel-inner">
 		<ul class="sidepanel-menu">
-			<li class="menu-title">Components</li>
+			<li class="menu-title">UI Components</li>
 			<li onclick="app.navigate('#home')">Home</li>
-			<li onclick="app.navigate('#home')">App</li>
-			<li onclick="app.navigate('#home')">Views</li>
-			<li onclick="app.navigate('#home')">Datasource</li>
-			<li onclick="app.navigate('#home')">List View</li>
-			<li onclick="app.navigate('#home')">Sidepanels</li>
+			<li onclick="app.navigate('#scroller')">Scroller</li>
+			<li onclick="app.navigate('#sidepanels')">Sidepanels</li>
+			<li onclick="app.navigate('#spinner')">Spinner</li>
+			<li onclick="app.navigate('#modals')">Modal Dialog</li>
+			<li onclick="app.navigate('#home')">Tabs</li>
 			<li onclick="app.navigate('#home')">Buttons</li>
+			<li onclick="app.navigate('#home')">List View</li>
 			<li onclick="app.navigate('#home')">Text Inputs</li>
 			<li onclick="app.navigate('#home')">Checkboxes</li>
 			<li onclick="app.navigate('#home')">Radiobuttons</li>
@@ -106,13 +54,8 @@
 			<li onclick="app.navigate('#home')">Dropdown</li>
 			<li onclick="app.navigate('#home')">Progress</li>
 			<li onclick="app.navigate('#home')">Slider</li>
-			<li onclick="app.navigate('#home')">Modal Dialog</li>
-			<li onclick="app.navigate('#home')">Tabs</li>
 			<li onclick="app.navigate('#home')">Icons</li>
-			<li onclick="app.navigate('#home')">Spinner</li>
-			<li onclick="app.navigate('#scroller')">Scroller</li>
 			<li onclick="app.navigate('#home')">Console</li>
-			<li onclick="app.navigate('#home')">Utils</li>
 			<li onclick="app.navigate('#home')">Themes</li>
 		</ul>
 	</div>
@@ -120,7 +63,9 @@
 
 <div class="app-sidepanel app-sidepanel-right" id="right-sidepanel" data-position="right">
 	<div class="app-sidepanel-inner">
-		right sidepanel
+			<ul class="sidepanel-menu">
+				<li class="menu-title">Right Sidepanel</li>
+			</ul>
 	</div>
 </div>
 
@@ -166,21 +111,6 @@ function testConsole() {
 		appconsole.log(new Date().getTime()+' ! ');
 	}
 }
-
-
-// window.addEventListener('touchstart', function(event) {
-//   alert('touched');
-// });
-
-// window.addEventListener('click', function(event) {
-//   alert('clicked');
-// })
-
-
-// document.getElementById('btnTest1').addEventListener('touchstart', function() {
-// 	alert('touched btn');
-// });
-
 
 </script>
  

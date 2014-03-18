@@ -1,0 +1,12 @@
+<div class="app-view" id="sidepanels-view" data-url="sidepanels" data-swipeleftsp="true" data-swiperightsp="true" data-persistent="false">
+	<ul class="view-header">
+		<li class="button" onclick="app.navigate('#home')"><span class="appicon appicon-chevron-left"></span> Sidepanels</li>
+	</ul>
+    <div class="view-body">
+    	<div class="view-body-inner">
+	    	<p>Sidepanels are accessible by swiping left/right or programatically by calling JS function.</p>
+			<button class="pull-left" onclick="app.sidepanels.left.toggle()">Toggle Left</button>
+			<button class="pull-right" onclick="app.sidepanels.right.toggle()">Toggle Right</button>
+    	</div>
+    </div>
+</div>

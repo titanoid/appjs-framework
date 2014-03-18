@@ -120,8 +120,10 @@ App.prototype.parseUrl = function(url) {
     return urldata;
 }
 
-App.prototype.addView  = function(view) {
+App.prototype.addView  = function(view, remote_view) {
+    remote_view = remote_view || false;
     var appview = new AppView(view, this);
+    appview.remote = remote_view;
     this.views.push(appview);
 }
 
@@ -129,7 +131,7 @@ App.prototype.addViewByUrl = function(url) {
     var views = document.getElementsByClassName('app-view');
     for(var i=0; i<views.length; i++) {
         if (views[i].dataset.url == url) {
-            this.addView(views[i]);
+            this.addView(views[i], true);
             return views[i];
         }
     }
@@ -157,7 +159,6 @@ App.prototype.showView = function(id) {
         return;
       }
 
-    setTimeout
     var view = this.getView(id);
 
     if (view.show(this.currentView) !== false)
@@ -182,40 +183,6 @@ App.prototype.getViewByURL = function(url) {
     return null;
 }
 
-App.prototype.showSpinner = function(dropshadow) {
-    if (this.spinner != null)
-        return;
-
-
-    this.spinner = document.createElement('DIV');
-    this.spinner.addClass('app-spinner');
-    var loading = document.createElement('DIV');
-    loading.addClass('loading');
-    this.spinner.appendChild(loading);
-
-    dropshadow = dropshadow || false;
-    
-    if (dropshadow) {
-        this.spinner.addClass('app-spinner-dropshadow');
-    }
-
-    document.body.appendChild(this.spinner);
-}
-
-App.prototype.hideSpinner = function() {
-    if (this.spinner == null)
-        return;
-
-    var objref = this;
-    var loading = this.spinner.getElementsByClassName('loading')[0];
-    loading.style.visibility = 'hidden';
-    setTimeout(function() {
-        objref.spinner.parentNode.removeChild(objref.spinner);    
-        objref.spinner = null;
-    }, 1);
-}
-
-
 App.prototype.ajax = function(url, settings) {
     settings = settings || {};
 
@@ -227,7 +194,7 @@ App.prototype.ajax = function(url, settings) {
     var xmlhttp = new XMLHttpRequest();
 
     if (spinner) 
-        this.showSpinner(spinnerShadow);
+        AppSpinner.show(spinnerShadow);
 
     var objref = this;
     // Callback function when XMLHttpRequest is ready
@@ -235,7 +202,7 @@ App.prototype.ajax = function(url, settings) {
         if(xmlhttp.readyState === 4) {
             if (xmlhttp.status === 200) {
                 if (spinner)
-                    objref.hideSpinner();
+                    AppSpinner.hide();
                 if (json)
                     var data = JSON.parse(xmlhttp.responseText);
                 else
