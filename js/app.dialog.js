@@ -135,8 +135,6 @@ AppDialog = {
 		// setTimeout(function() { objref._adjust() }, 2000);
 		
 		setTimeout(function() { objref._show() }, 100);
-
-
 	},
 
 	close: function() {
