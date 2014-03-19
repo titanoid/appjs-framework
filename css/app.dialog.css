@@ -9,6 +9,7 @@
 }
 
 .dialog-alert, .dialog-confirm {
+	visibility: hidden;
 	overflow: hidden;
 	position: absolute;
 	background-color: #eee;
@@ -22,9 +23,6 @@
 	min-width: 250px;
 	max-width: 90%;
 	height: 200px;
-
-	top: 50%;
-	left: 50%;
 }
 
 .dialog-alert .dialog-msg, .dialog-confirm .dialog-msg {

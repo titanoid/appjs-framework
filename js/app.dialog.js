@@ -16,6 +16,18 @@ AppDialog = {
 		this._create(msg, 'alert', callback);
 	},
 
+	_setTransition: function() {
+		this.wrapper.style.transition = 'all 200ms';
+		this.wrapper.style.WebkitTransition = 'all 200ms';
+		this.dialog.style.transition = 'all 200ms';
+		this.dialog.style.WebkitTransition = 'all 200ms';
+	},
+
+	_resetTransition: function() {
+		this.dialog.style.transition = '1ms';
+		this.dialog.style.WebkitTransition = '1ms';
+	},
+
 	_getDialogDOMClassname: function() {
 		switch(this.type) {
 			case 'alert': return 'dialog-alert';
@@ -24,35 +36,26 @@ AppDialog = {
 	},
 
 	_beforeShow: function() {
-		console.log('before show');
 		this.wrapper.style.opacity = '0';
+		this.dialog.visibility = 'hidden';
+
+		this._adjust();
 
 		if (this.type == 'alert' || this.type == 'confirm') {
 			this.dialog.style.opacity = '0';
 			this.dialog.style.transform = 'scale(0)';
 			this.dialog.style.WebkitTransform = 'scale(0)';
 			window.addEventListener('resize', AppDialog._adjust);
-			console.log('settin scale to 0');
 		}
-
-		var objref = this;
-		this.wrapper.style.transition = 'all 200ms';
-		this.wrapper.style.WebkitTransition = 'all 200ms';
-		this.dialog.style.transition = 'all 200ms';
-		this.dialog.style.WebkitTransition = 'all 200ms';
-		console.log('setting transition to 200ms');
 	},
 
 	_show: function() {
-		console.log('show');
 		if (this.type == 'alert' || this.type == 'confirm') {
 			this.dialog.style.transform = 'scale(1)';
 			this.dialog.style.WebkitTransform = 'scale(1)';
 			this.dialog.style.opacity = '1';
 			this.wrapper.style.opacity = '1';
-			console.log('setting scale to 1');
 		}
-
 	},
 
 	_beforeHide: function() {
@@ -67,7 +70,7 @@ AppDialog = {
 		console.log('after hide');
 		window.removeEventListener('resize', AppDialog._center);
 		if (this.wrapper != null)
-				objref.wrapper.parentNode.removeChild(this.wrapper);
+				this.wrapper.parentNode.removeChild(this.wrapper);
 
 		this.wrapper = null;
 		this.dialog = null;
@@ -126,21 +129,13 @@ AppDialog = {
 		document.body.appendChild(this.wrapper);
 
 		var objref = this;
-		setTimeout(function() {
-				
-				objref._adjust();
 
-				setTimeout(function(){ 
-						
-						objref._beforeShow();
+		setTimeout(function() { objref._beforeShow() }, 1);
 
-						setTimeout(function(){ 
-							objref._show();
-						}, 1);
+		// setTimeout(function() { objref._adjust() }, 2000);
+		
+		setTimeout(function() { objref._show() }, 100);
 
-				}, 1)
-
-		}, 1);
 
 	},
 
@@ -156,17 +151,17 @@ AppDialog = {
 	},
 
 	_adjust: function() {
-		console.log('adjust');
 		if (AppDialog.type == 'alert' || AppDialog.type == 'confirm') {
 			var dialog_h = Math.min(AppDialog.dialog_msg.clientHeight + 60, window.innerHeight * 0.9);
 
-			AppDialog.dialog.style.transition = 'all 1ms';
-			AppDialog.dialog.style.WebkitTransition = 'all 1ms';
-			AppDialog.dialog.style.height = dialog_h + 'px';
-			AppDialog.dialog.style.marginLeft = '-'+ (AppDialog.dialog.clientWidth / 2)+'px';
-			AppDialog.dialog.style.marginTop = '-'+ (dialog_h / 2)+'px';
-		}
+			var left = Math.round(window.innerWidth / 2) - Math.round(AppDialog.dialog.clientWidth / 2);
+			var top = Math.round(window.innerHeight / 2) - Math.round(dialog_h / 2);
 
+			AppDialog.dialog.style.height = dialog_h + 'px';
+			AppDialog.dialog.style.left = left + 'px';
+			AppDialog.dialog.style.top = top + 'px';
+			AppDialog.dialog.style.visibility = 'visible';
+		}
 	},
 
 	_getActions: function() {
@@ -174,7 +169,7 @@ AppDialog = {
 		if (this.type == 'alert') {
 			var item = document.createElement('BUTTON');
 			item.innerHTML = 'OK';
-			item.onclick = function() { AppDialog.closeAlert(); };
+			item.onclick = function() { AppDialog.close(); };
 			item.enableTap();
 			actions.push(item);
 		}
@@ -183,14 +178,14 @@ AppDialog = {
 			var item_yes = document.createElement('BUTTON');
 			item_yes.innerHTML = 'Yes';
 			item_yes.className = 'yes';
-			item_yes.onclick = function() { AppDialog.closeAlert(); };
+			item_yes.onclick = function() { AppDialog.close(); };
 			item_yes.enableTap();
 			actions.push(item_yes);
 
 			var item_no = document.createElement('BUTTON');
 			item_no.innerHTML = 'Yes';
 			item_no.className = 'yes';
-			item_no.onclick = function() { AppDialog.closeAlert(); };
+			item_no.onclick = function() { AppDialog.close(); };
 			item_no.enableTap();
 			actions.push(item_no);
 		}
