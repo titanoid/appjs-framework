@@ -6,6 +6,11 @@
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.4);
 	z-index: 999;
+
+}
+
+.app-dialog {
+
 }
 
 .dialog-alert, .dialog-confirm {
@@ -23,11 +28,33 @@
 	min-width: 250px;
 	max-width: 90%;
 	height: 200px;
+
+}
+
+.dialog-select {
+	visibility: hidden;
+	overflow: hidden;
+	position: absolute;
+	background-color: #eee;
+	border-top: 1px solid #666;
+	box-shadow: 0px 0px 10px #666;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	width: 100%;
+	padding: 5px;
+	left: 0px;
+	bottom: 0px;
+	opacity: 0.9;
+
 }
 
 .dialog-alert .dialog-msg, .dialog-confirm .dialog-msg {
-	font-size: 15px;
+	font-size: 18px;
 	padding: 10px;
+}
+
+.dialog-select .dialog-msg {
+	font-size: 18px;
 }
 
 .dialog-alert .dialog-actions, .dialog-confirm .dialog-actions {
@@ -39,6 +66,20 @@
 	height: 50px;
 }
 
+.dialog-select .dialog-actions {
+	background-color: #eee;
+	width: 100%;
+}
+
+.dialog-select button {
+	display: block;
+	width: 100%;
+	margin: 5px auto;
+	border: none;
+	padding-bottom: 6px;
+
+}
+
 .dialog-alert button {
 	width: 80px;
 	float: right;
@@ -47,7 +88,7 @@
 }
 
 .dialog-confirm button {
-	width: 60px;
+	width: 80px;
 	position: absolute;
 	top: 9px;
 }
@@ -57,5 +98,5 @@
 }
 
 .dialog-confirm button.yes {
-	right: 80px;
+	right: 100px;
 }

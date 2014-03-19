@@ -6,7 +6,10 @@
     	<div class="view-body-inner">
     		<h1>Modal Dialogs</h1>
 			<button onclick="alertDialog()">Alert Dialog</button>
-			<button onclick="">Info Dialog</button>
+			<button onclick="confirmDialog()">Confirm Dialog</button>
+            <br/>
+
+            <button onclick="selectDialog('Please select color')">Select Dialog</button>
 
             <br/><br/>
             <div id="dialog_log"></div>
@@ -22,6 +25,32 @@
 
         function alertClosed() {
             document.getElementById('dialog_log').innerHTML = document.getElementById('dialog_log').innerHTML+ 'alert closed...<br/>';
+        }
+
+        function confirmDialog() {
+            AppDialog.confirm('Are you sure you?', confirmClosed);
+        }
+
+        function confirmClosed(data) {
+            document.getElementById('dialog_log').innerHTML = document.getElementById('dialog_log').innerHTML+ 'confirm closed ('+data+')...<br/>';
+        }
+
+
+        function selectDialog(msg) {
+            var actions = [
+                            {key:'red', value:'Red'},
+                            {key:'yellow', value:'Yellow'},
+                            {key:'green', value:'Green'},
+                            {key:'orange', value:'Orange'},
+                            {key:'purple', value:'Pruple'},
+                            ];
+
+            AppDialog.select(msg, actions, selectDone);
+        }
+
+
+        function selectDone(data) {
+            document.getElementById('dialog_log').innerHTML = document.getElementById('dialog_log').innerHTML+ 'select closed ('+data+')...<br/>';   
         }
 
     </script>

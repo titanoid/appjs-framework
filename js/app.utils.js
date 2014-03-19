@@ -66,6 +66,21 @@ var Utils = {
       el.style.WebkitTransition = 'all 1ms';
   },
 
+  getEventTarget: function(e) {
+      var targ;
+      if (!e) var e = window.event;
+
+      if (e.target) 
+        targ = e.target;
+      else if 
+        (e.srcElement) targ = e.srcElement;
+      
+      if (targ.nodeType == 3) // defeat Safari bug
+        targ = targ.parentNode;
+
+      return targ;
+  }
+
 }
 
 if (!Object.keys) {
