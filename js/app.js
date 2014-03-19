@@ -19,8 +19,9 @@ App.prototype.init = function() {
         objref.currentView.adjust();
     });
 
-    // document.body.addEventListener('touchstart', function(event){ event.preventDefault(); })
-    document.body.addEventListener('touchmove', function(event){ event.preventDefault(); })
+    document.body.addEventListener('touchstart', App_BodyTouchStart );
+    document.body.addEventListener('touchmove', App_BodyTouchMove );
+    document.body.addEventListener('touchend', App_BodyTouchEnd );
 
     // init sidepanels 
     var sidepanels = document.getElementsByClassName('app-sidepanel');

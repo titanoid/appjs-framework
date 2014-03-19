@@ -84,17 +84,14 @@ var appconsole = {
 			var closer = document.createElement('DIV');
 			closer.id = "console-icon-close";
 			closer.className = "appicon appicon-remove";
-			closer.addEventListener('click', function(event) { objref.hide(); Utils.stopPropagation(event); });
-			closer.addEventListener('touchstart', function(event) { Utils.stopPropagation(event); });
-			closer.addEventListener('mousedown', function(event) { Utils.stopPropagation(event); });
+			closer.onclick = function(event) { objref.hide(); Utils.stopPropagation(event); };
+			closer.enableTap();
 			this.header.appendChild(closer);
 
 			var reset = document.createElement('DIV');
 			reset.id = "console-icon-reset";
 			reset.className = "appicon appicon-eye-close";
-			reset.addEventListener('click', function(event) { objref.clean(); Utils.stopPropagation(event); });
-			reset.addEventListener('touchstart', function(event) { Utils.stopPropagation(event); });
-			reset.addEventListener('mousedown', function(event) { Utils.stopPropagation(event); });
+			reset.onclick = function(event) { objref.clean(); Utils.stopPropagation(event); };
 			reset.enableTap();
 			this.header.appendChild(reset);
 

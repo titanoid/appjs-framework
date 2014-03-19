@@ -1,0 +1,28 @@
+<div class="app-view" id="dialogs-view" data-url="dialogs" data-swipeleftsp="true" data-persistent="false">
+	<ul class="view-header">
+		<li class="button" onclick="app.navigate('#home')"><span class="appicon appicon-chevron-left"></span> Modals</li>
+	</ul>
+    <div class="view-body">
+    	<div class="view-body-inner">
+    		<h1>Modal Dialogs</h1>
+			<button onclick="alertDialog()">Alert Dialog</button>
+			<button onclick="">Info Dialog</button>
+
+            <br/><br/>
+            <div id="dialog_log"></div>
+
+    	</div>
+    </div>
+
+
+    <script>
+    	function alertDialog() {
+            AppDialog.alert('Hello there, this is very cool alert dialog!', alertClosed);
+    	}
+
+        function alertClosed() {
+            document.getElementById('dialog_log').innerHTML = document.getElementById('dialog_log').innerHTML+ 'alert closed...<br/>';
+        }
+
+    </script>
+</div>

@@ -76,6 +76,10 @@ function AppView(view, appref) {
         this.is_swipe = false;
     }
 
+    // this.wrapper.addEventListener('touchstart', App_BodyTouchStart );
+    // this.wrapper.addEventListener('touchmove', App_BodyTouchMove );
+    // this.wrapper.addEventListener('touchend', App_BodyTouchEnd );
+
 
     //enable scroller
     this.scroller = null;
@@ -247,8 +251,6 @@ AppView.prototype.touchstart = function(event) {
 
     // Utils.cancelEvent(event);
     Utils.stopPropagation(event);
-
-    //this.appref.currentView.wrapper.style.webkitTransform = 'translateZ(0)';
 }
 
 AppView.prototype.touchmove = function(event) {

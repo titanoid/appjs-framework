@@ -43,7 +43,28 @@ var Utils = {
         pos.y = event.clientY;
       }
       return pos;
-  }
+  },
+
+
+  isDomElement: function(obj) {
+    try {
+      //Using W3 DOM2 (works for FF, Opera and Chrom)
+      return obj instanceof HTMLElement;
+    }
+    catch(e){
+      //Browsers not supporting W3 DOM2 don't have HTMLElement and
+      //an exception is thrown and we end up here. Testing some
+      //properties that all elements have. (works on IE7)
+      return (typeof obj==="object") &&
+        (obj.nodeType===1) && (typeof obj.style === "object") &&
+        (typeof obj.ownerDocument ==="object");
+    }
+  },
+
+  resetTraansition: function(el) {
+      el.style.transition = 'all 1ms';
+      el.style.WebkitTransition = 'all 1ms';
+  },
 
 }
 
@@ -86,4 +107,61 @@ if (!Object.keys) {
       return result;
     };
   }());
+}
+
+
+function App_BodyTouchStart(event) {
+    if (typeof event.target.onclick == 'function' || typeof event.target.tapfunc == 'function') {
+      if (event.target.onclick != null) {
+        event.target.tapfunc = event.target.onclick;
+        event.target.onclick = null;
+      }
+
+      event.target.touch_started = true;
+      event.target.touch_moved = false;
+      event.target.timer = null;
+      var el = event.target;
+      if (Utils.isDomElement(event.target)) {
+          event.target.timer = setTimeout(function() {
+          el.addClass('tap-active');
+        }, 70);
+      }
+    }
+    Utils.cancelEvent(event);
+}
+
+function App_BodyTouchMove(event) {
+  if (event.target.touch_started === true) {
+    event.target.touch_moved = true;
+    if (Utils.isDomElement(event.target)) { 
+      clearTimeout(event.target.timer);
+      event.target.removeClass('tap-active');
+    }
+  }
+  else {
+    Utils.cancelEvent(event);
+  }
+
+  Utils.cancelEvent(event);
+}
+
+function App_BodyTouchEnd(event) {
+    if (! event.target.touch_started) return;
+
+    if (Utils.isDomElement(event.target)) { 
+      clearTimeout(event.target.timer);
+      event.target.removeClass('tap-active');
+    }
+    if (event.target.touch_moved !== true){
+      // alert('calling click func');
+      event.target.tapfunc.call();
+    }
+
+    
+    event.target.touch_started = false;
+    event.target.touch_moved = null;
+    delete event.target.touch_started;
+    delete event.target.touch_moved;
+
+    Utils.cancelEvent(event);
 }
