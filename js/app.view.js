@@ -2,8 +2,9 @@ function AppView(view, appref) {
     this.id = view.id;
     this.url = view.dataset.url;
     this.remote = false;
-
+    
     this.appref = appref;
+    this.widgets = {};
 
     if (view.dataset.swipeleftsp == 'true')
         this.leftsp = this.appref.sidepanels.left;
@@ -87,6 +88,8 @@ function AppView(view, appref) {
         this.initScroller();
     }
     
+
+    this.initWidgets();
     ///////////////////
     this.currentView = null;
 }
@@ -110,7 +113,8 @@ AppView.prototype.initWidgets = function() {
     //init sliders ////////////////////////////////
     var sliders = this.wrapper.getElementsByClassName('app-slider');
     for(var i=0; i<sliders.length; i++) {
-        this.appref.widgets[sliders[i].id] = new AppSlider(sliders[i]);
+        this.widgets[sliders[i].id] = new AppSlider(sliders[i]);
+        this.appref.widgets[sliders[i].id] = this.widgets[sliders[i].id];
     }
     ////////////////////////////////////////////////
 
@@ -226,10 +230,15 @@ AppView.prototype.afterHide = function() {
     this.wrapper.dispatchEvent(this.onAfterHide);
     this.state = 'hidden';
 
+    // remove view from DOM and all initiated widgets
     if (this.remote && ! this.persistent) {
         this.wrapper.parentNode.removeChild(this.wrapper);
         var index = this.appref.views.indexOf(this);
         this.appref.views.splice(index, 1);
+        for(var key in this.widgets) {
+            delete this.widgets[key];
+            delete this.appref.widgets[key];
+        }
         delete this;
     }
 }
