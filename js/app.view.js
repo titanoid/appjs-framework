@@ -104,6 +104,18 @@ AppView.prototype.initScroller = function() {
     // this.scroller.init();
 }
 
+
+AppView.prototype.initWidgets = function() {
+
+    //init sliders ////////////////////////////////
+    var sliders = this.wrapper.getElementsByClassName('app-slider');
+    for(var i=0; i<sliders.length; i++) {
+        this.appref.widgets[sliders[i].id] = new AppSlider(sliders[i]);
+    }
+    ////////////////////////////////////////////////
+
+}
+
 AppView.prototype.bodyContent = function(content) {
     if (typeof content == 'undefined') {
         var body_content = this.scroller == null ? this.body.innerHTML : this.scroller.wrapper.innerHTML;

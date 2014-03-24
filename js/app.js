@@ -10,6 +10,8 @@ function App() {
 
     this.location = {path:'', params:null};
 
+    this.widgets = {};
+
     this.remoteViewPath = 'http://dev.appjsframework.com/view.php?id=%view-url%';
 }
 
