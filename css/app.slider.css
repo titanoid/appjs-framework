@@ -1,5 +1,18 @@
 .app-slider {
 	width: 100%;
+	height: 300px;
+	overflow: hidden;
+}
+
+.app-slider-inner {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+.app-slider-item {
+	width: 100%;
+	height: 100%;
 }
 
 .app-slider-template {
